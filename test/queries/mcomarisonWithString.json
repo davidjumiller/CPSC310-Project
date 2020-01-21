@@ -1,0 +1,19 @@
+{
+    "title": "Check that an mcomparison fails if given a string instead of a number",
+    "query":
+    {
+        "WHERE": {
+            "EQ": {
+                "courses_fail": "100"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

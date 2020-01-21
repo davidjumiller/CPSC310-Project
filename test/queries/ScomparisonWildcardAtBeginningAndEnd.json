@@ -1,0 +1,32 @@
+{
+    "title": "Check * at beginning and end of inputstring works in IS",
+    "query":
+    {
+        "WHERE": {
+            "AND": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": "*us*"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "busi"
+        }
+    ]
+}

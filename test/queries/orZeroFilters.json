@@ -1,0 +1,17 @@
+{
+    "title": "Check OR zero filters",
+    "query":
+    {
+        "WHERE": {
+            "OR":[{ }]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

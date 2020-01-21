@@ -1,0 +1,19 @@
+{
+    "title": "Check bad id string",
+    "query":
+    {
+        "WHERE": {
+            "EQ": {
+                "av_gtst_avg": 50
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "av_gtst_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

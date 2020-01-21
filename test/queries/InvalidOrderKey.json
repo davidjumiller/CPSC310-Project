@@ -1,0 +1,24 @@
+{
+    "title": "Check that is fails if it is given an invalid order key",
+    "query":
+    {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_avg"
+            ],
+            "ORDER": "courses_foo"
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

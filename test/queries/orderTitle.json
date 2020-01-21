@@ -1,0 +1,34 @@
+{
+    "title": "Check Order on title",
+    "query":
+    {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_title"
+            ],
+            "ORDER": "courses_title"
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_title": "childhood & adol"
+        },
+        {
+            "courses_title": "proc ctrl eng"
+        },
+        {
+            "courses_title": "rl es manage i"
+        }
+    ]
+}

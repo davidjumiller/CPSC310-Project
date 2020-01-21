@@ -1,0 +1,29 @@
+{
+    "title": "Test Not filter with a valid output",
+    "query":
+    {
+        "WHERE": {
+            "NOT":{
+                "EQ":{
+                    "avgtst_avg":50
+                }
+            }
+
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "avgtst_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "avgtst_dept": "cpsc"
+        },
+        {
+            "avgtst_dept": "cpsc"
+        }
+    ]
+}

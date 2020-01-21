@@ -1,0 +1,183 @@
+{
+    "title": "Check equal for year",
+    "query":
+    {
+        "WHERE": {
+            "AND": [
+                {
+                    "EQ": {
+                        "courses_year": 2007
+                    }
+                },
+
+                {
+                    "IS": {
+                        "courses_dept": "cpsc"
+                    }
+                }
+            ]},
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "cpsc"
+        }
+
+    ]
+}

@@ -1,0 +1,19 @@
+{
+    "title": "Check LT for fail",
+    "query":
+    {
+        "WHERE": {
+            "LT": {
+                "courses_fail": 0
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": []
+}

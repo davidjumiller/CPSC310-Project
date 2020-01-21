@@ -1,0 +1,35 @@
+{
+    "title": "Check EQ for pass",
+    "query":
+    {
+        "WHERE": {
+            "EQ": {
+                "courses_pass": 275
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "biol"
+        },
+        {
+            "courses_dept": "biol"
+        },
+        {
+            "courses_dept": "biol"
+        },
+        {
+            "courses_dept": "chem"
+        },
+        {
+            "courses_dept": "eosc"
+        }
+    ]
+}

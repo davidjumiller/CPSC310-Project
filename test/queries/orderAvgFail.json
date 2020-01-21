@@ -1,0 +1,22 @@
+{
+    "title": "Check Order fails if the order key is not in the columns",
+    "query":
+    {
+        "WHERE": {
+            "OR":[{
+                "EQ":{
+                    "courses_avg":50
+                }
+            }]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ],
+            "ORDER": "courses_avg"
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

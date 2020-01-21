@@ -1,0 +1,23 @@
+{
+    "title": "Check invalid mkey",
+    "query":
+    {
+        "WHERE": {
+            "EQ": {
+                "courses_avgg": 50
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "avgtst_dept": "cpsc"
+        }
+    ]
+}

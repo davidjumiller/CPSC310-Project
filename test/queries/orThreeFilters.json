@@ -1,0 +1,46 @@
+{
+    "title": "Check OR three filters",
+    "query":
+    {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                },
+                {
+                    "EQ": {
+                        "courses_avg": 1
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_id": "1000"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "busi"
+        },
+        {
+            "courses_dept": "chbe"
+        },
+        {
+            "courses_dept": "psyc"
+        },
+        {
+            "courses_dept": "wood"
+        }
+    ]
+}

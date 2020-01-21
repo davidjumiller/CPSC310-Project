@@ -1,0 +1,29 @@
+{
+    "title": "Check GT for audit",
+    "query":
+    {
+        "WHERE": {
+            "GT": {
+                "courses_audit": 20
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "cpsc"
+        },
+        {
+            "courses_dept": "rhsc"
+        },
+        {
+            "courses_dept": "rhsc"
+        }
+    ]
+}

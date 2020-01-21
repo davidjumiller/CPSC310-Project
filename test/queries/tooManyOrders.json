@@ -1,0 +1,26 @@
+{
+    "title": "Check more than one Order fails with InsightError",
+    "query":
+    {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_uuid",
+                "courses_title"
+            ],
+            "ORDER": "courses_uuid",
+            "ORDER": "courses_title"
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

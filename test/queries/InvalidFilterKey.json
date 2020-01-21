@@ -1,0 +1,23 @@
+{
+    "title": "Invalid filter key",
+    "query":
+    {
+        "WHERE": {
+            "O":[
+                {
+                    "EQ":{
+                        "courses_avg":50
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

@@ -1,0 +1,16 @@
+{
+    "title": "empty body not too many results ",
+    "query":
+    {
+        "WHERE": {
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "ResultTooLargeError"
+}

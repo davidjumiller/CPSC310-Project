@@ -1,0 +1,19 @@
+{
+    "title": "Check that referencing more than one dataset fails",
+    "query":
+    {
+        "WHERE": {
+            "EQ":{
+                "avgtst_avg": 50
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}
