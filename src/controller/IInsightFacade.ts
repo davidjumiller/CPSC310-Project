@@ -38,7 +38,6 @@ export class ResultTooLargeError extends Error {
 
 export interface IInsightFacade {
 
-    // recursion(obj: any): void ;
     /**
      * Add a dataset to insightUBC.
      *

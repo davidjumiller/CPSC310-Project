@@ -80,14 +80,14 @@ describe("InsightFacade Add/Remove Dataset", function () {
 
     it("Should add a valid dataset but missing one file", function () {
         const id: string = "oneBadFile";
-        const expected: string[] = ["avgtst"];
+        const expected: string[] = ["oneBadFile"];
         return insightFacade
             .addDataset(id, datasets[id], InsightDatasetKind.Courses)
             .then((result: string[]) => {
                 expect(result).to.deep.equal(expected);
             })
             .catch((err: any) => {
-                expect.fail(err, expected, "Should not have rejected");
+                expect.fail(err, expected, "Should not have rejected" + err);
             });
     });
 
