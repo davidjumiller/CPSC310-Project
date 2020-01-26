@@ -100,7 +100,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
                 expect(result).to.deep.equal(expected);
             })
             .catch((err: any) => {
-                expect.fail(err, expected, "Should not have rejected");
+                expect.fail(err, expected, "Should not have rejected " + err);
             });
     });
 
@@ -131,8 +131,8 @@ describe("InsightFacade Add/Remove Dataset", function () {
     });
 
     it("Should add 2 valid datasets", function () {
-        const id: string = "courses";
-        const id2: string = "fluff";
+        const id: string = "avgtst";
+        const id2: string = "oneBadFile";
         const expected: string[] = [id, id2];
         return insightFacade
             .addDataset(id, datasets[id], InsightDatasetKind.Courses)
@@ -145,7 +145,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
                             .to.deep.include(id2);
                     })
                     .catch((err: any) => {
-                        expect.fail(err, expected, "Should not have rejected");
+                        expect.fail(err, expected, "Should not have rejected the second add. " + err);
                     });
             })
             .catch((err: any) => {

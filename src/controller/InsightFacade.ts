@@ -3,6 +3,7 @@ import {IInsightFacade, InsightDataset, InsightDatasetKind} from "./IInsightFaca
 import {InsightError, NotFoundError} from "./IInsightFacade";
 import * as JSZip from "jszip";
 import {Course} from "./Course";
+import {Dataset} from "./Dataset";
 
 /**
  * This is the main programmatic entry point for the project.
@@ -10,16 +11,26 @@ import {Course} from "./Course";
  *
  */
 export default class InsightFacade implements IInsightFacade {
-    // let datasets:
+    // TODO create a dataset class which has:
+    //  ID: the id of the dataset (this is what is passed into addDataset as the id)
+    //  courses: this is an array of all the course objects in the dataset
+
+    public datasets: Dataset[];
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
+        this.datasets = [];
     }
 
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
+        // TODO check that the id is valid.
+        //   Could probably create a helper function because we are gonna check valid id's in multiple places I think
         let zip: JSZip = new JSZip();
         let courses: Course[] = [];
+        // This feels hacky but had to be done so we have a way to access this in the promises
+        let reference: InsightFacade = this;
         let p1 = new Promise<string[]>((resolve, reject) => {
-            zip.loadAsync(content, { base64: true}).then(function (files: JSZip) {
+            zip.loadAsync(content, { base64: true})
+                .then(function (files: JSZip) {
                 let promises: Array<Promise<any>> = [];
                 files.forEach( (relativePath, file) => {
                     // eslint-disable-next-line no-console
@@ -49,28 +60,35 @@ export default class InsightFacade implements IInsightFacade {
                             courses.push(curCourse);
                         }
                     });
-                    for (let i in courses) {
+                    // for (let i in courses) {
                         // eslint-disable-next-line no-console
-                        console.log(courses[i]);
-                    }
-                    // TODO build a proper dataset and then return all of the ids in the datasets lists
-                    let ids: string[] = [id];
-                    // datasets.push(new Dataset(id, courses));
-                    // for (let i in datasets) {
-                    //     ids.push(datasets[i].id);
+                        // console.log(courses[i]);
                     // }
-                    resolve(ids);
-                }, function error(e) {
-                    // TODO better reject message
-                    reject("why?");
+
+                    // Log.trace(reference);
+                    // Push the newly added dataset onto the list of datasets then walk
+                    // through all the added datasets and get their id's
+                    let ids: string[] = [];
+                    reference.datasets.push(new Dataset(id, courses));
+                    for (let i in reference.datasets) {
+                        ids.push(reference.datasets[i].id);
+                    }
+                    // Log.trace("here");
+                    return resolve(ids);
+                // }, function error(e) {
+                    // reject("why?");
                     // handle the error
+                }).catch((err: any) => {
+                    // I'm not sure how this will ever be hit
+                    return reject(err);
                 });
             }).catch((error: any) => {
-                reject(error);
+                // This should catch any bad ZIP files
+                return reject(error);
             });
         });
+        // I dont think we need this return
         return p1;
-        // return Promise.reject("Not implemented.");
     }
 
     private static findValidFields(fieldName: string, curCourse: Course, section: any) {
