@@ -1,5 +1,5 @@
 import Log from "../Util";
-import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError} from "./IInsightFacade";
+import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from "./IInsightFacade";
 import * as JSZip from "jszip";
 import {Course} from "./Course";
 import {Dataset} from "./Dataset";
@@ -157,7 +157,17 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public removeDataset(id: string): Promise<string> {
-        return Promise.reject("Not implemented.");
+        if (!this.validID(id)) {
+            return Promise.reject(new InsightError("Invalid ID" + id));
+        }
+        for (let i in this.datasets) {
+            if (id === this.datasets[i].id) {
+                // This should remove the array element
+                this.datasets.splice(parseInt(i, 10) , 1);
+                return Promise.resolve(id);
+            }
+        }
+        return Promise.reject(new NotFoundError(id + " has not been added yet"));
     }
 
     public performQuery(query: any): Promise<any[]> {

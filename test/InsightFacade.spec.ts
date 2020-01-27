@@ -255,7 +255,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
                     });
             })
             .catch((err: any) => {
-                expect.fail(err, id, "Should not have rejected");
+                expect.fail(err, id, "Should not have rejected " + err);
             });
     });
 
