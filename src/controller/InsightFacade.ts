@@ -66,9 +66,9 @@ export default class InsightFacade implements IInsightFacade {
                     // console.log("iterating over", relativePath);
                     // let courses: Course[] = [];
                     // I had to add this because for some reason the first iteration of the courses test was NULL
-                    // let openedFile: any = files.file(relativePath);
-                    // if (openedFile) {promises.push(openedFile.async("text")); }
-                    if (file) { promises.push(file.async("text")); }
+                    let openedFile: any = files.file(relativePath);
+                    if (openedFile) {promises.push(openedFile.async("text")); }
+                    // if (file) { promises.push(file.async("text")); }
                 });
                 // Once all of the files have finished being read continue
                 Promise.all(promises).then(function success( allFiles) {
