@@ -1,9 +1,9 @@
 import Log from "../Util";
-import {IInsightFacade, InsightDataset, InsightDatasetKind} from "./IInsightFacade";
-import {InsightError, NotFoundError} from "./IInsightFacade";
+import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from "./IInsightFacade";
 import * as JSZip from "jszip";
 import {Course} from "./Course";
 import {Dataset} from "./Dataset";
+
 
 /**
  * This is the main programmatic entry point for the project.
@@ -11,33 +11,63 @@ import {Dataset} from "./Dataset";
  *
  */
 export default class InsightFacade implements IInsightFacade {
-    // TODO create a dataset class which has:
-    //  ID: the id of the dataset (this is what is passed into addDataset as the id)
-    //  courses: this is an array of all the course objects in the dataset
-
     public datasets: Dataset[];
+
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
         this.datasets = [];
     }
 
+    private validID(id: string): boolean {
+        if (id.includes("_") || !(/\S/.test(id))) {
+            return false;
+        }
+        return true;
+    }
+    private static isCourseValid(curCourse: Course): boolean {
+        if (curCourse.title === undefined || curCourse.instructor === undefined || curCourse.id === undefined
+            || curCourse.audit === undefined || curCourse.avg === undefined || curCourse.dept === undefined ||
+            curCourse.fail === undefined || curCourse.pass === undefined || curCourse.uuid === undefined ||
+            curCourse.year === undefined) {
+            return false;
+        }
+        return true;
+    }
+
+    private  static writeDatasetToDisk(newDataset: Dataset) {
+        // TODO write newDataset to disk
+    }
+
+
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        // TODO check that the id is valid.
-        //   Could probably create a helper function because we are gonna check valid id's in multiple places I think
+        if (!this.validID(id) || kind === InsightDatasetKind.Rooms) {
+            return Promise.reject(new InsightError());
+        }
         let zip: JSZip = new JSZip();
         let courses: Course[] = [];
         // This feels hacky but had to be done so we have a way to access this in the promises
         let reference: InsightFacade = this;
+        let ids: string[] = [];
+        for (let i in reference.datasets) {
+            if (id === reference.datasets[i].id) {
+                return Promise.reject(new InsightError());
+            }
+            ids.push(reference.datasets[i].id);
+        }
+
         let p1 = new Promise<string[]>((resolve, reject) => {
             zip.loadAsync(content, { base64: true})
                 .then(function (files: JSZip) {
                 let promises: Array<Promise<any>> = [];
                 files.forEach( (relativePath, file) => {
+                    // TODO see if we need to reject a dataset if it has more than one subdirectory
+                    //  If we do have to then just check for more than one /
                     // eslint-disable-next-line no-console
                     // console.log("iterating over", relativePath);
                     // let courses: Course[] = [];
                     // I had to add this because for some reason the first iteration of the courses test was NULL
                     // let openedFile: any = files.file(relativePath);
+                    // if (openedFile) {promises.push(openedFile.async("text")); }
                     if (file) { promises.push(file.async("text")); }
                 });
                 // Once all of the files have finished being read continue
@@ -54,35 +84,34 @@ export default class InsightFacade implements IInsightFacade {
                             for (let fieldName in section) {
                                 InsightFacade.findValidFields(fieldName, curCourse, section);
                             }
-                            // TODO if the course is missing any fields don't add it
-                            courses.push(curCourse);
+                            // TODO figure out if we should skip an entire file if one section is invalid
+                            //  or if we just skip the section
+                            if (InsightFacade.isCourseValid(curCourse) ) {courses.push(curCourse); }
                         }
                     });
-                    // for (let i in courses) {
-                        // eslint-disable-next-line no-console
-                        // console.log(courses[i]);
-                    // }
 
+                    // Log.trace(courses);
                     // Log.trace(reference);
                     // Push the newly added dataset onto the list of datasets then walk
                     // through all the added datasets and get their id's
-                    let ids: string[] = [];
-                    reference.datasets.push(new Dataset(id, courses));
-                    for (let i in reference.datasets) {
-                        ids.push(reference.datasets[i].id);
-                    }
-                    // Log.trace("here");
+                    // let ids: string[] = [];
+                    const newDataset: Dataset = new Dataset(id, courses);
+                    reference.datasets.push(newDataset);
+                    InsightFacade.writeDatasetToDisk(newDataset);
+                    // for (let i in reference.datasets) {
+                    //     ids.push(reference.datasets[i].id);
+                    // }
+                    ids.push(newDataset.id);
                     return resolve(ids);
                 // }, function error(e) {
-                    // reject("why?");
                     // handle the error
                 }).catch((err: any) => {
                     // I'm not sure how this will ever be hit
-                    return reject(err);
+                    return reject(new InsightError(err));
                 });
             }).catch((error: any) => {
                 // This should catch any bad ZIP files
-                return reject(error);
+                return reject(new InsightError(error));
             });
         });
         // I dont think we need this return
@@ -101,7 +130,11 @@ export default class InsightFacade implements IInsightFacade {
                 curCourse.avg = section[fieldName];
                 break;
             case "Professor":
-                curCourse.instructor = section[fieldName];
+                if (section[fieldName] === "") {
+                    curCourse.instructor = " ";
+                } else {
+                    curCourse.instructor = section[fieldName];
+                }
                 break;
             case "Title":
                 curCourse.title = section[fieldName];
@@ -125,7 +158,17 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public removeDataset(id: string): Promise<string> {
-        return Promise.reject("Not implemented.");
+        if (!this.validID(id)) {
+            return Promise.reject(new InsightError("Invalid ID" + id));
+        }
+        for (let i in this.datasets) {
+            if (id === this.datasets[i].id) {
+                // This should remove the array element
+                this.datasets.splice(parseInt(i, 10) , 1);
+                return Promise.resolve(id);
+            }
+        }
+        return Promise.reject(new NotFoundError(id + " has not been added yet"));
     }
 
     public performQuery(query: any): Promise<any[]> {

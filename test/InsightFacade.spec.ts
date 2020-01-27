@@ -155,7 +155,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
     });
 
     it("Should fail due to two of the same datasets", function () {
-        const id: string = "courses";
+        const id: string = "avgtst";
         const expected: string[] = [id];
         return insightFacade
             .addDataset(id, datasets[id], InsightDatasetKind.Courses)
@@ -163,18 +163,19 @@ describe("InsightFacade Add/Remove Dataset", function () {
                 insightFacade
                     .addDataset(id, datasets[id], InsightDatasetKind.Courses)
                     .then((result: string[]) => {
-                        expect.fail(
-                            result,
-                            expected,
-                            "Should have been rejected",
-                        );
+                        expect.fail(result, expected, "Should have been rejected");
+                        // return Promise.resolve((result));
                     })
                     .catch((err: any) => {
+                        // Log.trace("why are we here. " + err);
                         expect(err).instanceOf(InsightError);
+                        // return Promise.resolve((err));
                     });
             })
             .catch((err: any) => {
+                // Log.trace("Way down here");
                 expect.fail(err, id, "Should not have rejected");
+                // return Promise.resolve((err));
             });
     });
 
@@ -255,7 +256,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
                     });
             })
             .catch((err: any) => {
-                expect.fail(err, id, "Should not have rejected");
+                expect.fail(err, id, "Should not have rejected " + err);
             });
     });
 
