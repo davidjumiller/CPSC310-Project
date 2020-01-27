@@ -60,8 +60,7 @@ export default class InsightFacade implements IInsightFacade {
                 let promises: Array<Promise<any>> = [];
                 files.forEach( (relativePath, file) => {
                     // TODO see if we need to reject a dataset if it has more than one subdirectory
-                    //  If we do have to then just check for more than one /
-                    // eslint-disable-next-line no-console
+                    // If we do have to then just check for more than one /
                     // console.log("iterating over", relativePath);
                     // let courses: Course[] = [];
                     // I had to add this because for some reason the first iteration of the courses test was NULL
