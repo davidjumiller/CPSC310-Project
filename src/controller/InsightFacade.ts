@@ -45,14 +45,13 @@ export default class InsightFacade implements IInsightFacade {
         }
         let zip: JSZip = new JSZip();
         let courses: Course[] = [];
+        let rows: number = 0;
         // This feels hacky but had to be done so we have a way to access this in the promises
         let reference: InsightFacade = this;
         let ids: string[] = [];
         for (let i in reference.datasets) {
-            if (id === reference.datasets[i].id) {
-                return Promise.reject(new InsightError());
-            }
-            ids.push(reference.datasets[i].id);
+            if (id === reference.datasets[i].isd.id) { return Promise.reject(new InsightError()); }
+            ids.push(reference.datasets[i].isd.id);
         }
 
         let p1 = new Promise<string[]>((resolve, reject) => {
@@ -66,9 +65,9 @@ export default class InsightFacade implements IInsightFacade {
                     // console.log("iterating over", relativePath);
                     // let courses: Course[] = [];
                     // I had to add this because for some reason the first iteration of the courses test was NULL
-                    // let openedFile: any = files.file(relativePath);
-                    // if (openedFile) {promises.push(openedFile.async("text")); }
-                    if (file) { promises.push(file.async("text")); }
+                    let openedFile: any = files.file(relativePath);
+                    if (openedFile) {promises.push(openedFile.async("text")); }
+                    // if (file) { promises.push(file.async("text")); }
                 });
                 // Once all of the files have finished being read continue
                 Promise.all(promises).then(function success( allFiles) {
@@ -86,7 +85,7 @@ export default class InsightFacade implements IInsightFacade {
                             }
                             // TODO figure out if we should skip an entire file if one section is invalid
                             //  or if we just skip the section
-                            if (InsightFacade.isCourseValid(curCourse) ) {courses.push(curCourse); }
+                            if (InsightFacade.isCourseValid(curCourse) ) {courses.push(curCourse); rows++; }
                         }
                     });
 
@@ -95,13 +94,14 @@ export default class InsightFacade implements IInsightFacade {
                     // Push the newly added dataset onto the list of datasets then walk
                     // through all the added datasets and get their id's
                     // let ids: string[] = [];
-                    const newDataset: Dataset = new Dataset(id, courses);
+                    const isd: InsightDataset = {id: id, kind: InsightDatasetKind.Courses, numRows: rows};
+                    const newDataset: Dataset = new Dataset(isd, courses);
                     reference.datasets.push(newDataset);
                     InsightFacade.writeDatasetToDisk(newDataset);
                     // for (let i in reference.datasets) {
                     //     ids.push(reference.datasets[i].id);
                     // }
-                    ids.push(newDataset.id);
+                    ids.push(newDataset.isd.id);
                     return resolve(ids);
                 // }, function error(e) {
                     // handle the error
@@ -162,7 +162,7 @@ export default class InsightFacade implements IInsightFacade {
             return Promise.reject(new InsightError("Invalid ID" + id));
         }
         for (let i in this.datasets) {
-            if (id === this.datasets[i].id) {
+            if (id === this.datasets[i].isd.id) {
                 // This should remove the array element
                 this.datasets.splice(parseInt(i, 10) , 1);
                 return Promise.resolve(id);
