@@ -40,9 +40,7 @@ export default class InsightFacade implements IInsightFacade {
 
 
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        if (!this.validID(id) || kind === InsightDatasetKind.Rooms) {
-            return Promise.reject(new InsightError());
-        }
+        if (!this.validID(id) || kind === InsightDatasetKind.Rooms) {return Promise.reject(new InsightError()); }
         let zip: JSZip = new JSZip();
         let courses: Course[] = [];
         let rows: number = 0;
@@ -59,62 +57,79 @@ export default class InsightFacade implements IInsightFacade {
                 .then((files: JSZip) => {
                 let promises: Array<Promise<any>> = [];
                 files.forEach( (relativePath, file) => {
-                    // TODO see if we need to reject a dataset if it has more than one subdirectory
                     // If we do have to then just check for more than one /
-                    // console.log("iterating over", relativePath);
+                    // Log.trace("iterating over", relativePath);
+
+                    // This "accidentaly" stops situations like a courses dataset being added as a rooms dataset
+                    //  This should be good for this sprint but it will need to be looked at more when we add rooms
+                    if (!relativePath.startsWith("courses/")) {
+                        return reject(new InsightError());
+                    }
                     // let courses: Course[] = [];
                     // I had to add this because for some reason the first iteration of the courses test was NULL
                     let openedFile: any = files.file(relativePath);
-                    if (openedFile) {promises.push(openedFile.async("text")); }
+                    if (openedFile) {
+                        promises.push(openedFile.async("text"));
+                    }
                     // if (file) { promises.push(file.async("text")); }
                 });
                 // Once all of the files have finished being read continue
-                Promise.all(promises).then(( allFiles) => {
-                    allFiles.forEach((file) => {
-                        // Parse the file into a JSON object
-                        let json: any = JSON.parse(file);
-                        // Get the array of files from the file
-                        let sections: any = json["result"];
-                        // Go through all of the sections in the file
-                        for (let section of sections) {
-                            let curCourse: Course = new Course();
-                            // Go through all of the elements of a section
-                            for (let fieldName in section) {
-                                InsightFacade.findValidFields(fieldName, curCourse, section);
-                            }
-                            // TODO figure out if we should skip an entire file if one section is invalid
-                            //  or if we just skip the section
-                            if (InsightFacade.isCourseValid(curCourse) ) {courses.push(curCourse); rows++; }
-                        }
-                    });
-
-                    // Log.trace(courses);
-                    // Log.trace(reference);
-                    // Push the newly added dataset onto the list of datasets then walk
-                    // through all the added datasets and get their id's
-                    // let ids: string[] = [];
-                    const isd: InsightDataset = {id: id, kind: InsightDatasetKind.Courses, numRows: rows};
-                    const newDataset: Dataset = new Dataset(isd, courses);
-                    reference.datasets.push(newDataset);
-                    InsightFacade.writeDatasetToDisk(newDataset);
-                    // for (let i in reference.datasets) {
-                    //     ids.push(reference.datasets[i].id);
-                    // }
-                    ids.push(newDataset.isd.id);
-                    return resolve(ids);
-                // }, function error(e) {
-                    // handle the error
-                }).catch((err: any) => {
-                    // I'm not sure how this will ever be hit
-                    return reject(new InsightError(err));
-                });
-            }).catch((error: any) => {
+                this.CreateAllSectionsFromLoadedFiles(promises, courses, rows, id, reference, ids, resolve, reject);
+                }).catch((error: any) => {
+                    Log.trace("Why mad");
                 // This should catch any bad ZIP files
-                return reject(new InsightError(error));
-            });
+                    return reject(new InsightError(error));
+                });
         });
-        // I dont think we need this return
         return p1;
+    }
+
+    private CreateAllSectionsFromLoadedFiles(promises: Array<Promise<any>>, courses: Course[], rows: number, id: string,
+                                             reference: InsightFacade, ids: string[],
+                                             resolve: (value?: (PromiseLike<string[]> | string[])) => void,
+                                             reject: (reason?: any) => void) {
+        Promise.all(promises).then((allFiles) => {
+            allFiles.forEach((file) => {
+                // Parse the file into a JSON object
+                let json: any = JSON.parse(file);
+                // Get the array of files from the file
+                let sections: any = json["result"];
+                // Go through all of the sections in the file
+                for (let section of sections) {
+                    let curCourse: Course = new Course();
+                    // Go through all of the elements of a section
+                    for (let fieldName in section) {
+                        InsightFacade.findValidFields(fieldName, curCourse, section);
+                    }
+                    // TODO figure out if we should skip an entire file if one section is invalid
+                    //  or if we just skip the section
+                    if (InsightFacade.isCourseValid(curCourse)) {
+                        courses.push(curCourse);
+                        rows++;
+                    }
+                }
+            });
+
+            // Log.trace(courses);
+            // Log.trace(reference);
+            // Push the newly added dataset onto the list of datasets then walk
+            // through all the added datasets and get their id's
+            // let ids: string[] = [];
+            const isd: InsightDataset = {id: id, kind: InsightDatasetKind.Courses, numRows: rows};
+            const newDataset: Dataset = new Dataset(isd, courses);
+            reference.datasets.push(newDataset);
+            InsightFacade.writeDatasetToDisk(newDataset);
+            // for (let i in reference.datasets) {
+            //     ids.push(reference.datasets[i].id);
+            // }
+            ids.push(newDataset.isd.id);
+            return resolve(ids);
+            // }, function error(e) {
+            // handle the error
+        }).catch((err: any) => {
+            // I'm not sure how this will ever be hit
+            return reject(new InsightError(err));
+        });
     }
 
     private static findValidFields(fieldName: string, curCourse: Course, section: any) {
