@@ -187,6 +187,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public removeDataset(id: string): Promise<string> {
+        // TODO remove the dataset from disk
         if (!this.validID(id)) {
             return Promise.reject(new InsightError("Invalid ID" + id));
         }
