@@ -4,6 +4,8 @@ import * as JSZip from "jszip";
 import {Course} from "./Course";
 import {Dataset} from "./Dataset";
 import * as fs from "fs-extra";
+import {Query} from "./Query";
+import {QueryHandler} from "./QueryHandler";
 
 
 /**
@@ -203,6 +205,14 @@ export default class InsightFacade implements IInsightFacade {
 
     public performQuery(query: any): Promise<any[]> {
         return Promise.reject("Not implemented.");
+        let parsedQuery: Query = QueryHandler.parseQuery(query);
+        if (!QueryHandler.validQuery(parsedQuery)) {
+            Promise.reject(new InsightError());
+        }
+        let selectedSections: Course[] = QueryHandler.executeBody(parsedQuery.body);
+        let selectedFields: string[] = QueryHandler.executeOptions(query.options);
+        let retval: any[] = QueryHandler.filterWithOptions(selectedSections, selectedFields);
+        return Promise.resolve(retval);
     }
 
     public listDatasets(): Promise<InsightDataset[]> {
