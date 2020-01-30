@@ -38,13 +38,10 @@ export default class InsightFacade implements IInsightFacade {
 
     private static readSavedDatasets(datasets: Dataset[]) {
         // Ensures that there is a parsedDatasets dir
-        fs.mkdirpSync("/../../data/");
-        Log.trace("Test2");
-        // Reads the files within parsedDatasets
-        fs.readdir("/../../data/", (err, files) => {
+        fs.readdir("./data/", (err, files) => {
             // Each file is read into memory
             files.forEach((file) => {
-                fs.readJSON("/../../data/" + file, (err2, Obj) => {
+                fs.readJSON("./data/" + file, (err2, Obj) => {
                     if (err2) { Log.trace(err2); }
                     datasets.push(Obj);
                 });
@@ -53,9 +50,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     private static writeDatasetToDisk(newDataset: Dataset) {
-        fs.mkdirpSync("/../../data/");
-        Log.trace("Test");
-        fs.writeJSON("/../../data/" + newDataset.isd.id + ".json", newDataset);
+        fs.writeJSONSync("./data/" + newDataset.isd.id + ".json", newDataset);
     }
 
 
