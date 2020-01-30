@@ -3,6 +3,7 @@ import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFou
 import * as JSZip from "jszip";
 import {Course} from "./Course";
 import {Dataset} from "./Dataset";
+import * as fs from "fs-extra";
 
 
 /**
@@ -16,6 +17,7 @@ export default class InsightFacade implements IInsightFacade {
     constructor() {
         Log.trace("InsightFacadeImpl::init()");
         this.datasets = [];
+        InsightFacade.readSavedDatasets(this.datasets);
     }
 
     private validID(id: string): boolean {
@@ -34,8 +36,26 @@ export default class InsightFacade implements IInsightFacade {
         return true;
     }
 
-    private  static writeDatasetToDisk(newDataset: Dataset) {
-        // TODO write newDataset to disk
+    private static readSavedDatasets(datasets: Dataset[]) {
+        // Ensures that there is a parsedDatasets dir
+        fs.mkdirpSync("/../../data/");
+        Log.trace("Test2");
+        // Reads the files within parsedDatasets
+        fs.readdir("/../../data/", (err, files) => {
+            // Each file is read into memory
+            files.forEach((file) => {
+                fs.readJSON("/../../data/" + file, (err2, Obj) => {
+                    if (err2) { Log.trace(err2); }
+                    datasets.push(Obj);
+                });
+            });
+        });
+    }
+
+    private static writeDatasetToDisk(newDataset: Dataset) {
+        fs.mkdirpSync("/../../data/");
+        Log.trace("Test");
+        fs.writeJSON("/../../data/" + newDataset.isd.id + ".json", newDataset);
     }
 
 
