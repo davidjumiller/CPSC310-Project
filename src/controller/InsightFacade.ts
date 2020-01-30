@@ -56,7 +56,7 @@ export default class InsightFacade implements IInsightFacade {
 
         let p1 = new Promise<string[]>((resolve, reject) => {
             zip.loadAsync(content, { base64: true})
-                .then(function (files: JSZip) {
+                .then((files: JSZip) => {
                 let promises: Array<Promise<any>> = [];
                 files.forEach( (relativePath, file) => {
                     // TODO see if we need to reject a dataset if it has more than one subdirectory
@@ -69,8 +69,8 @@ export default class InsightFacade implements IInsightFacade {
                     // if (file) { promises.push(file.async("text")); }
                 });
                 // Once all of the files have finished being read continue
-                Promise.all(promises).then(function success( allFiles) {
-                    allFiles.forEach(function (file) {
+                Promise.all(promises).then(( allFiles) => {
+                    allFiles.forEach((file) => {
                         // Parse the file into a JSON object
                         let json: any = JSON.parse(file);
                         // Get the array of files from the file
