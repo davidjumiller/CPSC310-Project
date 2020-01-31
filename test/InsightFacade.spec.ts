@@ -105,6 +105,41 @@ describe("InsightFacade Add/Remove Dataset", function () {
             });
     });
 
+    it("Mock test to help develop perform query", function () {
+        // This should fail eventually because the dataset in the query is not avgtst
+        const id: string = "avgtst";
+        const expected: string[] = [id];
+        return insightFacade
+            .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+            .then((result: string[]) => {
+                insightFacade.performQuery({
+                    WHERE: {
+                        AND: [
+                            {
+                                EQ: {
+                                    courses_avg: 50
+                                }
+                            },
+                            {
+                                IS: {
+                                    courses_dept: "busi"
+                                }
+                            }
+                        ]
+                    },
+                    OPTIONS: {
+                        COLUMNS: [
+                            "courses_dept"
+                        ]
+                    }
+                });
+                expect(true).to.deep.equal(true);
+            })
+            .catch((err: any) => {
+                expect.fail(err, expected, "Should not have rejected " + err);
+            });
+    });
+
     it("Should fail to add an invalid dataset", function () {
         const id: string = "invalidDataSet";
         const expected: string[] = [id];
@@ -442,13 +477,14 @@ describe("InsightFacade PerformQuery", () => {
                 insightFacade.addDataset(id, data, ds.kind),
             );
         }
-        return Promise.all(loadDatasetPromises).catch((err) => {
+        return Promise.all(loadDatasetPromises);
+            // .catch((err) => {
             /* *IMPORTANT NOTE: This catch is to let this run even without the implemented addDataset,
              * for the purposes of seeing all your tests run.
              * TODO For C1, remove this catch block (but keep the Promise.all)
              */
-            return Promise.resolve("HACK TO LET QUERIES RUN");
-        });
+            // return Promise.resolve("HACK TO LET QUERIES RUN");
+        // });
     });
 
     beforeEach(function () {
@@ -470,9 +506,11 @@ describe("InsightFacade PerformQuery", () => {
     // Dynamically create and run a test for each query in testQueries
     // Creates an extra "test" called "Should run test queries" as a byproduct. Don't worry about it
     it("Should run test queries", function () {
+        Log.trace("here2");
         describe("Dynamic InsightFacade PerformQuery tests", function () {
             for (const test of testQueries) {
                 it(`[${test.filename}] ${test.title}`, function (done) {
+                    Log.trace("yay");
                     insightFacade
                         .performQuery(test.query)
                         .then((result) => {

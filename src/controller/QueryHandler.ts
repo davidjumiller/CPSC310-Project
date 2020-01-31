@@ -7,11 +7,11 @@ import {Section} from "./Section";
 export class QueryHandler {
 
     public static parseQuery(query: any): Query {
-        return undefined;
+        return new Query(query);
     }
 
     public static validQuery(parsedQuery: Query): boolean {
-        return false;
+        return true;
     }
 
     public static executeBody(body: Body): Section[] {

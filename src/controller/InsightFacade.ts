@@ -205,7 +205,7 @@ export default class InsightFacade implements IInsightFacade {
     }
 
     public performQuery(query: any): Promise<any[]> {
-        return Promise.reject("Not implemented.");
+        // return Promise.reject("Not implemented.");
         let parsedQuery: Query = QueryHandler.parseQuery(query);
         if (!QueryHandler.validQuery(parsedQuery)) {
             Promise.reject(new InsightError());
