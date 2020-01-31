@@ -2,7 +2,7 @@ import {Body} from "./Body";
 import {Options} from "./Options";
 import Log from "../Util";
 import {Query} from "./Query";
-import {Course} from "./Course";
+import {Section} from "./Section";
 
 export class QueryHandler {
 
@@ -14,7 +14,7 @@ export class QueryHandler {
         return false;
     }
 
-    public static executeBody(body: Body): Course[] {
+    public static executeBody(body: Body): Section[] {
         return [];
     }
 
@@ -22,7 +22,7 @@ export class QueryHandler {
         return [];
     }
 
-    public static filterWithOptions(selectedSections: Course[], selectedFields: string[]): any[] {
+    public static filterWithOptions(selectedSections: Section[], selectedFields: string[]): any[] {
         return [];
     }
 }

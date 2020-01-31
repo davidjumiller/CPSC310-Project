@@ -1,13 +1,13 @@
-import {Course} from "./Course";
+import {Section} from "./Section";
 import Log from "../Util";
 import {InsightDataset} from "./IInsightFacade";
 export class Dataset {
     // public id: string;
     public isd: InsightDataset;
-    public courses: Course[];
+    public sections: Section[];
 
-    constructor(id: InsightDataset, coursearr: Course[]) {
+    constructor(id: InsightDataset, sectionarr: Section[]) {
         this.isd = id;
-        this.courses = coursearr;
+        this.sections = sectionarr;
     }
 }

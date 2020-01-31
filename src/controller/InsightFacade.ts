@@ -1,7 +1,7 @@
 import Log from "../Util";
 import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from "./IInsightFacade";
 import * as JSZip from "jszip";
-import {Course} from "./Course";
+import { Section } from "./Section";
 import {Dataset} from "./Dataset";
 import * as fs from "fs-extra";
 import {Query} from "./Query";
@@ -28,11 +28,11 @@ export default class InsightFacade implements IInsightFacade {
         }
         return true;
     }
-    private static isCourseValid(curCourse: Course): boolean {
-        if (curCourse.title === undefined || curCourse.instructor === undefined || curCourse.id === undefined
-            || curCourse.audit === undefined || curCourse.avg === undefined || curCourse.dept === undefined ||
-            curCourse.fail === undefined || curCourse.pass === undefined || curCourse.uuid === undefined ||
-            curCourse.year === undefined) {
+    private static isSectionValid(curSection: Section): boolean {
+        if (curSection.title === undefined || curSection.instructor === undefined || curSection.id === undefined
+            || curSection.audit === undefined || curSection.avg === undefined || curSection.dept === undefined ||
+            curSection.fail === undefined || curSection.pass === undefined || curSection.uuid === undefined ||
+            curSection.year === undefined) {
             return false;
         }
         return true;
@@ -59,7 +59,7 @@ export default class InsightFacade implements IInsightFacade {
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
         if (!this.validID(id) || kind === InsightDatasetKind.Rooms) {return Promise.reject(new InsightError()); }
         let zip: JSZip = new JSZip();
-        let courses: Course[] = [];
+        let sections: Section[] = [];
         let rows: number = 0;
         // This feels hacky but had to be done so we have a way to access this in the promises
         let reference: InsightFacade = this;
@@ -82,7 +82,7 @@ export default class InsightFacade implements IInsightFacade {
                     if (!relativePath.startsWith("courses/")) {
                         return reject(new InsightError());
                     }
-                    // let courses: Course[] = [];
+                    // let Sections: Section[] = [];
                     // I had to add this because for some reason the first iteration of the courses test was NULL
                     let openedFile: any = files.file(relativePath);
                     if (openedFile) {
@@ -91,7 +91,7 @@ export default class InsightFacade implements IInsightFacade {
                     // if (file) { promises.push(file.async("text")); }
                 });
                 // Once all of the files have finished being read continue
-                this.CreateAllSectionsFromLoadedFiles(promises, courses, rows, id, reference, ids, resolve, reject);
+                this.CreateAllSectionsFromLoadedFiles(promises, sections, rows, id, reference, ids, resolve, reject);
                 }).catch((error: any) => {
                     Log.trace("Why mad");
                 // This should catch any bad ZIP files
@@ -101,7 +101,8 @@ export default class InsightFacade implements IInsightFacade {
         return p1;
     }
 
-    private CreateAllSectionsFromLoadedFiles(promises: Array<Promise<any>>, courses: Course[], rows: number, id: string,
+    private CreateAllSectionsFromLoadedFiles(promises: Array<Promise<any>>, sections: Section[], rows: number,
+                                             id: string,
                                              reference: InsightFacade, ids: string[],
                                              resolve: (value?: (PromiseLike<string[]> | string[])) => void,
                                              reject: (reason?: any) => void) {
@@ -110,18 +111,18 @@ export default class InsightFacade implements IInsightFacade {
                 // Parse the file into a JSON object
                 let json: any = JSON.parse(file);
                 // Get the array of files from the file
-                let sections: any = json["result"];
+                let fileSections: any = json["result"];
                 // Go through all of the sections in the file
-                for (let section of sections) {
-                    let curCourse: Course = new Course();
+                for (let section of fileSections) {
+                    let curSection: Section = new Section();
                     // Go through all of the elements of a section
                     for (let fieldName in section) {
-                        InsightFacade.findValidFields(fieldName, curCourse, section);
+                        InsightFacade.findValidFields(fieldName, curSection, section);
                     }
                     // TODO figure out if we should skip an entire file if one section is invalid
                     //  or if we just skip the section
-                    if (InsightFacade.isCourseValid(curCourse)) {
-                        courses.push(curCourse);
+                    if (InsightFacade.isSectionValid(curSection)) {
+                        fileSections.push(curSection);
                         rows++;
                     }
                 }
@@ -133,7 +134,7 @@ export default class InsightFacade implements IInsightFacade {
             // through all the added datasets and get their id's
             // let ids: string[] = [];
             const isd: InsightDataset = {id: id, kind: InsightDatasetKind.Courses, numRows: rows};
-            const newDataset: Dataset = new Dataset(isd, courses);
+            const newDataset: Dataset = new Dataset(isd, sections);
             reference.datasets.push(newDataset);
             InsightFacade.writeDatasetToDisk(newDataset);
             // for (let i in reference.datasets) {
@@ -149,52 +150,52 @@ export default class InsightFacade implements IInsightFacade {
         });
     }
 
-    private static findValidFields(fieldName: string, curCourse: Course, section: any) {
+    private static findValidFields(fieldName: string, curSection: Section, section: any) {
         switch (fieldName) {
             case "Subject":
-                curCourse.dept = section[fieldName];
+                curSection.dept = section[fieldName];
                 break;
             case "Course":
-                curCourse.id = section[fieldName];
+                curSection.id = section[fieldName];
                 break;
             case "Avg":
-                curCourse.avg = section[fieldName];
+                curSection.avg = section[fieldName];
                 break;
             case "Professor":
                 if (section[fieldName] === "") {
-                    curCourse.instructor = " ";
+                    curSection.instructor = " ";
                 } else {
-                    curCourse.instructor = section[fieldName];
+                    curSection.instructor = section[fieldName];
                 }
                 break;
             case "Title":
-                curCourse.title = section[fieldName];
+                curSection.title = section[fieldName];
                 break;
             case "Pass":
-                curCourse.pass = section[fieldName];
+                curSection.pass = section[fieldName];
                 break;
             case "Fail":
-                curCourse.fail = section[fieldName];
+                curSection.fail = section[fieldName];
                 break;
             case "Audit":
-                curCourse.audit = section[fieldName];
+                curSection.audit = section[fieldName];
                 break;
             case "id":
-                curCourse.uuid = section[fieldName];
+                curSection.uuid = section[fieldName];
                 break;
             case "Year":
-                curCourse.year = section[fieldName];
+                curSection.year = section[fieldName];
                 break;
         }
     }
 
     public removeDataset(id: string): Promise<string> {
-        // TODO remove the dataset from disk
         if (!this.validID(id)) {
             return Promise.reject(new InsightError("Invalid ID" + id));
         }
         for (let i in this.datasets) {
             if (id === this.datasets[i].isd.id) {
+                fs.removeSync("./data/" + this.datasets[i].isd.id + ".json");
                 // This should remove the array element
                 this.datasets.splice(parseInt(i, 10) , 1);
                 return Promise.resolve(id);
@@ -209,7 +210,7 @@ export default class InsightFacade implements IInsightFacade {
         if (!QueryHandler.validQuery(parsedQuery)) {
             Promise.reject(new InsightError());
         }
-        let selectedSections: Course[] = QueryHandler.executeBody(parsedQuery.body);
+        let selectedSections: Section[] = QueryHandler.executeBody(parsedQuery.body);
         let selectedFields: string[] = QueryHandler.executeOptions(query.options);
         let retval: any[] = QueryHandler.filterWithOptions(selectedSections, selectedFields);
         return Promise.resolve(retval);
