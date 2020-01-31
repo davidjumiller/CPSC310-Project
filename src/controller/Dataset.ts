@@ -1,4 +1,4 @@
-import {Section} from "./Section";
+import { Section } from "./Section";
 import Log from "../Util";
 import {InsightDataset} from "./IInsightFacade";
 export class Dataset {
