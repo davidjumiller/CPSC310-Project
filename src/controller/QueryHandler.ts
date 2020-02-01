@@ -7,7 +7,10 @@ import {Section} from "./Section";
 export class QueryHandler {
 
     public static parseQuery(query: any): Query {
-        return new Query(query);
+        let q: Query = new Query(query);
+        // Log.trace("foo");
+        // Log.trace(q);
+        return q;
     }
 
     public static validQuery(parsedQuery: Query): boolean {

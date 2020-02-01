@@ -11,7 +11,7 @@ enum MField {
 
 export class MKey {
     constructor(mkey: string) {
-        Log.trace(mkey);
+        // Log.trace(mkey);
         let strs: string[] = mkey.split("_");
         if (strs.length > 2) {
             // TODO thrown an error because invalid MKey

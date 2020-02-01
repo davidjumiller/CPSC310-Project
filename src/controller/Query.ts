@@ -33,20 +33,6 @@ export class Query {
                 // TODO throw error
             }
             inum++;
-            // switch ( i ) {
-            //     case "WHERE":
-            //         Log.trace("body added");
-            //         this.body = new Body(query[i]);
-            //         break;
-            //     case "OPTIONS":
-            //         Log.trace("options added");
-            //         this.options = new Options(query[i]);
-            //         break;
-            //     default:
-            //         Log.trace("invalid query at query stage");
-            //         // TODO how do we want to set a query to invalid
-            //         break;
-            // }
         }
     }
 }

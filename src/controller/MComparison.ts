@@ -9,8 +9,8 @@ enum MComparator {
 
 export class MComparison {
     constructor(queryElement: any) {
-        Log.trace("mComp" );
-        Log.trace(queryElement);
+        // Log.trace("mComp" );
+        // Log.trace(queryElement);
         let keys: string[] = Object.keys(queryElement);
         if (keys.length > 1) {
             // TODO throw an error there is more than one key in the MComparison
@@ -34,7 +34,7 @@ export class MComparison {
         }
 
         let mkeyNumPair: any = queryElement[keys[0]];
-        Log.trace(mkeyNumPair);
+        // Log.trace(mkeyNumPair);
 
         let mKeys: string[] = Object.keys(mkeyNumPair);
         if (mKeys.length > 1) {
