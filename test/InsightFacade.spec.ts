@@ -129,8 +129,10 @@ describe("InsightFacade Add/Remove Dataset", function () {
                     },
                     OPTIONS: {
                         COLUMNS: [
-                            "courses_dept"
-                        ]
+                            "courses_dept",
+                            "courses_avg"
+                        ],
+                        ORDER: "courses_dept"
                     }
                 });
                 expect(true).to.deep.equal(true);
