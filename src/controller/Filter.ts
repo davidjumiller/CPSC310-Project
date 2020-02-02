@@ -3,13 +3,14 @@ import {MComparison} from "./MComparison";
 import {SComparison} from "./SComparison";
 import {Negation} from "./Negation";
 import Log from "../Util";
+import {InsightError} from "./IInsightFacade";
 
 export class Filter {
     constructor(queryElement: any) {
         let keys: string[] = Object.keys(queryElement);
         if (keys.length > 1) {
-            // TODO throw an error there is more than one key in the filter
-            Log.trace("error in filter");
+            throw (new InsightError("Filter has more than one key"));
+            // Log.trace("error in filter");
         }
         if (keys.length === 1) {
             switch (keys[0]) {
@@ -30,7 +31,7 @@ export class Filter {
                     this.negation = new Negation(queryElement[keys[0]]);
                     break;
                 default:
-                    // TODO throw an error invalid filter
+                    throw (new InsightError("Invalid Filter"));
             }
         }
     }

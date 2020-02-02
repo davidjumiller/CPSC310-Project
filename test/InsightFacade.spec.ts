@@ -112,7 +112,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
         return insightFacade
             .addDataset(id, datasets[id], InsightDatasetKind.Courses)
             .then((result: string[]) => {
-                insightFacade.performQuery({
+                return insightFacade.performQuery({
                     WHERE: {
                         AND: [
                             {
@@ -134,8 +134,13 @@ describe("InsightFacade Add/Remove Dataset", function () {
                         ],
                         ORDER: "courses_dept"
                     }
+                })
+                    .then((res: string[]) => {
+                    expect(true).to.deep.equal(true);
+                })
+                    .catch((error: any) => {
+                    expect.fail(error, expected, "Should not have rejected " + error);
                 });
-                expect(true).to.deep.equal(true);
             })
             .catch((err: any) => {
                 expect.fail(err, expected, "Should not have rejected " + err);

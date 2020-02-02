@@ -1,6 +1,7 @@
 import {SKey} from "./SKey";
 import {InputString} from "./InputString";
 import Log from "../Util";
+import {InsightError} from "./IInsightFacade";
 
 export class SComparison {
     constructor(queryElement: any) {
@@ -10,8 +11,8 @@ export class SComparison {
         let keys: string[] = Object.keys(queryElement);
         // Log.trace(keys);
         if (keys.length > 1) {
-            // TODO throw an error there is more than one key in the SComparison
-            Log.trace("error in SComparison");
+            throw (new InsightError("Too many keys in SComparison"));
+            // Log.trace("error in SComparison");
         }
 
         this.sKey = new SKey(keys[0]);
@@ -31,13 +32,11 @@ export class SComparison {
         // Log.trace(input);
 
         if (input.includes("*")) {
-            // TODO throw an error because there are too many wildcards
-            Log.trace("too many * in SComparison");
+            throw (new InsightError("Too many wildcards in SComparison"));
+            // Log.trace("too many * in SComparison");
         }
 
         this.inputString = new InputString(input);
-
-        // TODO implement
     }
 
     public sKey: SKey;

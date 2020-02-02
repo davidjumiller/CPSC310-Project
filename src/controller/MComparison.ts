@@ -1,5 +1,6 @@
 import {MKey} from "./MKey";
 import Log from "../Util";
+import {InsightError} from "./IInsightFacade";
 
 enum MComparator {
     LT = 0,
@@ -13,8 +14,8 @@ export class MComparison {
         // Log.trace(queryElement);
         let keys: string[] = Object.keys(queryElement);
         if (keys.length > 1) {
-            // TODO throw an error there is more than one key in the MComparison
-            Log.trace("error in MComparison");
+            throw (new InsightError("too many keys in MComparison"));
+            // Log.trace("error in MComparison");
         }
 
         // Figure out which MComparator is used
@@ -29,8 +30,8 @@ export class MComparison {
                 this.mComparator = MComparator.EQ;
                 break;
             default:
-                Log.trace("invalid Mcomparator");
-                // TODO throw an error invalid MComparator
+                // Log.trace("invalid Mcomparator");
+                throw (new InsightError("Invalid MComparator"));
         }
 
         let mkeyNumPair: any = queryElement[keys[0]];
@@ -38,8 +39,8 @@ export class MComparison {
 
         let mKeys: string[] = Object.keys(mkeyNumPair);
         if (mKeys.length > 1) {
-            // TODO throw an error there is more than one MKey in the MComparison
-            Log.trace("error in MComparison");
+            throw (new InsightError("Too many MKey's in MComparison"));
+            // Log.trace("error in MComparison");
         }
         this.mKey = new MKey(mKeys[0]);
         if (typeof mkeyNumPair[mKeys[0]] === "number") {

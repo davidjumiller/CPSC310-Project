@@ -9,7 +9,7 @@ export class QueryHandler {
     public static parseQuery(query: any): Query {
         let q: Query = new Query(query);
         // Log.trace("foo");
-        Log.trace(q);
+        // Log.trace(q);
         return q;
     }
 

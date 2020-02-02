@@ -1,6 +1,7 @@
 import {Body} from "./Body";
 import {Options} from "./Options";
 import Log from "../Util";
+import {InsightError} from "./IInsightFacade";
 
 export class Query {
     public body: Body;
@@ -17,7 +18,7 @@ export class Query {
                     this.body = new Body(query[i]);
                     // Log.trace(query[i]);
                 } else {
-                    // TODO throw error
+                    throw( new InsightError("Invalid first key in Query"));
                 }
             } else if (inum === 1) {
                 if (i === "OPTIONS") {
@@ -25,12 +26,12 @@ export class Query {
                     this.options = new Options(query[i]);
                     // Log.trace(query[i]);
                 } else {
-                    Log.trace("error in query const");
-                    // TODO throw error
+                    // Log.trace("error in query const");
+                    throw (new InsightError("invalid second key in query"));
                 }
             } else {
                 Log.trace("error in query const");
-                // TODO throw error
+                throw (new InsightError("Too many keys in Query"));
             }
             inum++;
         }

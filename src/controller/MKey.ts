@@ -1,5 +1,6 @@
 import {IdString} from "./IdString";
 import Log from "../Util";
+import {InsightError} from "./IInsightFacade";
 
 enum MField {
     avg = 0,
@@ -14,8 +15,8 @@ export class MKey {
         // Log.trace(mkey);
         let strs: string[] = mkey.split("_");
         if (strs.length > 2) {
-            // TODO thrown an error because invalid MKey
-            Log.trace("invalid MKey");
+            throw (new InsightError("Invalid MKey"));
+            // Log.trace("invalid MKey");
         }
         // Set the mField
         switch (strs[1]) {
@@ -35,8 +36,8 @@ export class MKey {
                 this.mField = MField.year;
                 break;
             default:
-                Log.trace("invalid MKey");
-                // TODO thrown an error because invalid MKey
+                // Log.trace("invalid MKey");
+                throw (new InsightError("Invalid MKey"));
                 break;
         }
 

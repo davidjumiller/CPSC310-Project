@@ -1,11 +1,12 @@
 import Log from "../Util";
+import {InsightError} from "./IInsightFacade";
 
 export class IdString {
     constructor(str: string) {
         // Log.trace(str);
         if (str.includes("_")) {
-            // TODO throw an error invalid idString
-            Log.trace("invalid idString");
+            throw (new InsightError("Invalid IDString"));
+            // Log.trace("invalid idString");
         }
         this.idString = str;
         // Log.trace(this.idString);
