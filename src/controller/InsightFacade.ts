@@ -122,7 +122,7 @@ export default class InsightFacade implements IInsightFacade {
                     // TODO figure out if we should skip an entire file if one section is invalid
                     //  or if we just skip the section
                     if (InsightFacade.isSectionValid(curSection)) {
-                        fileSections.push(curSection);
+                        sections.push(curSection);
                         rows++;
                     }
                 }
@@ -212,7 +212,7 @@ export default class InsightFacade implements IInsightFacade {
             if (!QueryHandler.validQuery(parsedQuery)) {
                 Promise.reject(new InsightError());
             }
-            let selectedSections: Section[] = QueryHandler.executeBody(parsedQuery.body);
+            let selectedSections: Section[] = QueryHandler.executeBody(parsedQuery, this.datasets);
             let selectedFields: string[] = QueryHandler.executeOptions(query.options);
             let retval: any[] = QueryHandler.filterWithOptions(selectedSections, selectedFields);
             return Promise.resolve(retval);

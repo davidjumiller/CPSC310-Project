@@ -3,6 +3,7 @@ import {Options} from "./Options";
 import Log from "../Util";
 import {Query} from "./Query";
 import {Section} from "./Section";
+import {Dataset} from "./Dataset";
 
 export class QueryHandler {
 
@@ -17,7 +18,18 @@ export class QueryHandler {
         return true;
     }
 
-    public static executeBody(body: Body): Section[] {
+    public static executeBody(query: Query, datasets: Dataset[]): Section[] {
+        let activeDataset: Dataset;
+        for (let i of datasets) {
+            if (i.isd.id === query.datasetID) {
+                activeDataset = i;
+            }
+        }
+        // Log.trace(activeDataset.sections);
+        for (let section of activeDataset.sections) {
+            // TODO check if the section meets the query
+
+        }
         return [];
     }
 

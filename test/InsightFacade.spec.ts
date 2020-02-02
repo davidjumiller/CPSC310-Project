@@ -117,22 +117,22 @@ describe("InsightFacade Add/Remove Dataset", function () {
                         AND: [
                             {
                                 EQ: {
-                                    courses_avg: 50
+                                    avgtst_avg: 50
                                 }
                             },
                             {
                                 IS: {
-                                    courses_dept: "busi"
+                                    avgtst_dept: "busi"
                                 }
                             }
                         ]
                     },
                     OPTIONS: {
                         COLUMNS: [
-                            "courses_dept",
-                            "courses_avg"
+                            "avgtst_dept",
+                            "avgtst_avg"
                         ],
-                        ORDER: "courses_dept"
+                        ORDER: "avgtst_dept"
                     }
                 })
                     .then((res: string[]) => {
