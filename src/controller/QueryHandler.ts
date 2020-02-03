@@ -7,7 +7,12 @@ import {MComparison} from "./MComparison";
 import {SComparison} from "./SComparison";
 import {Negation} from "./Negation";
 import {Filter} from "./Filter";
+import {Key} from "./Key";
+import {SKey} from "./SKey";
+import {MKey} from "./MKey";
+import {Columns} from "./Columns";
 import {InsightError} from "./IInsightFacade";
+import { IdString } from "./IdString";
 
 export class QueryHandler {
 
@@ -19,6 +24,34 @@ export class QueryHandler {
     }
 
     public static validQuery(parsedQuery: Query): boolean {
+        // Should work for now, .key.key probably need to be changed
+        let key: SKey | MKey = parsedQuery.options.key.key;
+        let columnKeys: Key[] = parsedQuery.options.columns.keys;
+        let validKey = false;
+
+        // Checks for if 'Order': key is in columns
+        for (let i in columnKeys) {
+            if (columnKeys[i].key === key) {
+                validKey = true;
+                break;
+            }
+        }
+        if (!validKey) {
+            return false;
+        }
+
+        // Checks if Query is referencing more than one dataset
+        // This part looks recursively looks for Key IdStrings and pushes them to keyIds
+        let keyIds: IdString[] = [];
+        this.findBodyKeyIds(keyIds, parsedQuery.body.filter);
+        this.findOptionsKeyIds(keyIds, parsedQuery.options);
+
+        // Every Id in keyIds should be the exact same
+        for (let i in keyIds) {
+            if (keyIds[0].idString !== keyIds[i].idString) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -50,6 +83,31 @@ export class QueryHandler {
 
     public static filterWithOptions(selectedSections: Section[], selectedFields: string[]): any[] {
         return [];
+    }
+
+    private static findBodyKeyIds(ids: &IdString[], filter: Filter) {
+        // Note: filter should not be valid if there is more than one of these, but this function does not check this
+        if (filter.logicComparison !== undefined) {
+            for (let i in filter.logicComparison.filters) {
+                this.findBodyKeyIds(ids, filter.logicComparison.filters[i]);
+            }
+        }
+        if (filter.mComparison !== undefined) {
+            ids.push(filter.mComparison.mKey.idString);
+        }
+        if (filter.sComparison !== undefined) {
+            ids.push(filter.sComparison.sKey.idString);
+        }
+        if (filter.negation !== undefined) {
+            this.findBodyKeyIds(ids, filter.negation.filter);
+        }
+    }
+
+    private static findOptionsKeyIds(ids: &IdString[], options: Options) {
+        for (let i in options.columns.keys) {
+            ids.push(options.columns.keys[i].key.idString);
+        }
+        ids.push(options.key.key.idString);
     }
 
     private static matchesQueryLogicComp(logicComparison: LogicComparison, section: Section): boolean {

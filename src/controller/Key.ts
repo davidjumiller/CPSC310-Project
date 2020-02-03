@@ -12,13 +12,13 @@ export class Key {
         }
         if (strs[1] === "avg" || strs[1] === "pass" ||
             strs[1] === "fail" || strs[1] === "audit" || strs[1] === "year") {
-            this.mKey = new MKey(key);
+            this.key = new MKey(key);
         } else {
-            this.sKey = new SKey(key);
+            this.key = new SKey(key);
         }
 
     }
 
-    public mKey: MKey;
-    public sKey: SKey;
+    // Changed this to have one singular key of either type
+    public key: MKey | SKey;
 }
