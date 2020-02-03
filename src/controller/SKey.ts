@@ -24,19 +24,19 @@ export class SKey {
         // Set the sField
         switch (strs[1]) {
             case "dept":
-                this.sField = SField.dept;
+                this.sField = "dept";
                 break;
             case "id":
-                this.sField = SField.id;
+                this.sField = "id";
                 break;
             case "instructor":
-                this.sField = SField.instructor;
+                this.sField = "instructor";
                 break;
             case "title":
-                this.sField = SField.title;
+                this.sField = "title";
                 break;
             case "uuid":
-                this.sField = SField.uuid;
+                this.sField = "uuid";
                 break;
             default:
                 // Log.trace("invalid SKey");
@@ -46,5 +46,5 @@ export class SKey {
     }
 
     public idString: IdString;
-    public sField: SField;
+    public sField: string;
 }

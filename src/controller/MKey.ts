@@ -2,13 +2,13 @@ import {IdString} from "./IdString";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
 
-enum MField {
-    avg = 0,
-    pass = 1,
-    fail = 2,
-    audit = 3,
-    year = 4,
-}
+// enum MField {
+//     avg = 0,
+//     pass = 1,
+//     fail = 2,
+//     audit = 3,
+//     year = 4,
+// }
 
 export class MKey {
     constructor(mkey: string) {
@@ -21,19 +21,19 @@ export class MKey {
         // Set the mField
         switch (strs[1]) {
             case "avg":
-                this.mField = MField.avg;
+                this.mField = "avg";
                 break;
             case "pass":
-                this.mField = MField.pass;
+                this.mField = "pass";
                 break;
             case "fail":
-                this.mField = MField.fail;
+                this.mField = "fail";
                 break;
             case "audit":
-                this.mField = MField.audit;
+                this.mField = "audit";
                 break;
             case "year":
-                this.mField = MField.year;
+                this.mField = "year";
                 break;
             default:
                 // Log.trace("invalid MKey");
@@ -46,5 +46,5 @@ export class MKey {
     }
 
     public idString: IdString;
-    public mField: MField;
+    public mField: string;
 }

@@ -1,7 +1,7 @@
 import {Filter} from "./Filter";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
-enum Logic {
+export enum Logic {
     AND = 0,
     OR= 1,
 }
