@@ -21,19 +21,19 @@ export class MKey {
         // Set the mField
         switch (strs[1]) {
             case "avg":
-                this.mField = "avg";
+                this.field = "avg";
                 break;
             case "pass":
-                this.mField = "pass";
+                this.field = "pass";
                 break;
             case "fail":
-                this.mField = "fail";
+                this.field = "fail";
                 break;
             case "audit":
-                this.mField = "audit";
+                this.field = "audit";
                 break;
             case "year":
-                this.mField = "year";
+                this.field = "year";
                 break;
             default:
                 // Log.trace("invalid MKey");
@@ -46,5 +46,5 @@ export class MKey {
     }
 
     public idString: IdString;
-    public mField: string;
+    public field: string;
 }

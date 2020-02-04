@@ -155,7 +155,7 @@ export class QueryHandler {
 
         // TODO switch on mComarator and do right thing
         // Below if is wrong look prev line
-        if (section[mComparison.mKey.mField] === mComparison.num) {
+        if (section[mComparison.mKey.field] === mComparison.num) {
             return true;
         } else {
             return false;
