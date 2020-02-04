@@ -10,7 +10,7 @@ import {Filter} from "./Filter";
 import {Key} from "./Key";
 import {SKey} from "./SKey";
 import {MKey} from "./MKey";
-import {InsightError} from "./IInsightFacade";
+import {InsightError, ResultTooLargeError} from "./IInsightFacade";
 import {IdString} from "./IdString";
 import Log from "../Util";
 
@@ -87,9 +87,14 @@ export class QueryHandler {
             if (QueryHandler.matchesFilter(query.body.filter, section)) {
                 // Log.trace("yay matches");
                 retval.push(section);
+                // Make sure that there aren't too many matching sections
+                if (retval.length > 5000) {
+                    throw (new ResultTooLargeError("over 5000 sections match this query"));
+                }
             }
             // TODO check if the section meets the query
         }
+
         return retval;
     }
 
@@ -101,15 +106,15 @@ export class QueryHandler {
 
     public static filterWithOptions(selectedSections: Section[], options: Options): any[] {
         let retval: any[] = [];
+        // Log.trace(options);
+
+        let foo: any = {};
+
         for (let section of selectedSections) {
-            let curObj: any [];
-            // {avgtst_avg: sdfsd,
-            //     avgtst_dept: sdfsdf,
-            // }
-            for ( let i in section) {
-                // Log.trace(i);
-                // TODO check if the current key is any of the keys in options.columns
-                //  then add that keys value to curObj in the correct field
+            let curObj: any = {};
+            for (let i of options.columns.keys) {
+                // This adds a key:value pair to the curObj
+                curObj[i.key.idString.idString + "_" + i.key.field] = section[i.key.field];
             }
             retval.push(curObj);
         }

@@ -114,25 +114,14 @@ describe("InsightFacade Add/Remove Dataset", function () {
             .then((result: string[]) => {
                 return insightFacade.performQuery({
                     WHERE: {
-                        AND: [
-                            {
-                                EQ: {
-                                    avgtst_avg: 50
-                                }
-                            },
-                            {
-                                IS: {
-                                    avgtst_dept: "busi"
-                                }
-                            }
-                        ]
+                        EQ: {
+                            avgtst_avg: 50
+                        }
                     },
                     OPTIONS: {
                         COLUMNS: [
-                            "avgtst_dept",
-                            "avgtst_avg"
-                        ],
-                        ORDER: "avgtst_dept"
+                            "avgtst_dept"
+                        ]
                     }
                 })
                     .then((res: string[]) => {

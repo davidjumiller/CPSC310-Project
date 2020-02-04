@@ -14,10 +14,6 @@
         }
     }
 ,
-    "isQueryValid": true,
-    "result": [
-        {
-            "avgtst_dept": "cpsc"
-        }
-    ]
+    "isQueryValid": false,
+    "result": "InsightError"
 }
