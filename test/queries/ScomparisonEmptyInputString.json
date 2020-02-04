@@ -1,5 +1,5 @@
 {
-    "title": "Check * at beginning and end of inputstring works in IS",
+    "title": "Check that an empty input string works",
     "query":
     {
         "WHERE": {

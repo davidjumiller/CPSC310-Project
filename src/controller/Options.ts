@@ -20,14 +20,20 @@ export class Options {
         }
 
         // TODO make sure this works if someone inputs multiple orders
-        if ( keys[1] === "ORDER") {
-            // Log.trace(keys[1]);
-            let order: string = queryElement[keys[1]];
-            this.key = new Key(order);
-            // Log.trace(order);
-        } else {
-            throw (new InsightError("The second key in Options is not ORDER"));
+        // Make sure that there is an ORDER because its optional
+        if (keys.length === 2) {
+            if (keys[1] === "ORDER") {
+                // Log.trace(keys[1]);
+                let order: string = queryElement[keys[1]];
+                this.key = new Key(order);
+                // Log.trace(order);
+            } else {
+                throw (new InsightError("The second key in Options is not ORDER"));
+            }
         }
+        // else {
+        //     this.key = new Key("courses_dept");
+        // }
     }
 
     public columns: Columns;

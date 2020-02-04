@@ -513,11 +513,9 @@ describe("InsightFacade PerformQuery", () => {
     // Dynamically create and run a test for each query in testQueries
     // Creates an extra "test" called "Should run test queries" as a byproduct. Don't worry about it
     it("Should run test queries", function () {
-        Log.trace("here2");
         describe("Dynamic InsightFacade PerformQuery tests", function () {
             for (const test of testQueries) {
                 it(`[${test.filename}] ${test.title}`, function (done) {
-                    Log.trace("yay");
                     insightFacade
                         .performQuery(test.query)
                         .then((result) => {

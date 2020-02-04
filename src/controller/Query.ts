@@ -10,6 +10,7 @@ export class Query {
     public datasetID: string;
 
     private static  getDatasetId(filter: Filter): string {
+        // TODO this has to check the Columns if there is no filter because an empty filter is valid
         // I am not 100% sure this works but it works for my one test case at least
         if (filter.negation) {
             return Query.getDatasetId(filter.negation.filter);
@@ -49,6 +50,9 @@ export class Query {
                 throw (new InsightError("Too many keys in Query"));
             }
             inum++;
+        }
+        if (!this.body || !this.options) {
+            throw (new InsightError("invalid query"));
         }
     }
 }

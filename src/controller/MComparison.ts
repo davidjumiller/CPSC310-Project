@@ -2,7 +2,7 @@ import {MKey} from "./MKey";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
 
-enum MComparator {
+export enum MComparator {
     LT = 0,
     GT = 1,
     EQ = 2,

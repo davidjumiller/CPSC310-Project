@@ -3,16 +3,15 @@ import {Query} from "./Query";
 import {Section} from "./Section";
 import {Dataset} from "./Dataset";
 import {Logic, LogicComparison} from "./LogicComparison";
-import {MComparison} from "./MComparison";
+import {MComparator, MComparison} from "./MComparison";
 import {SComparison} from "./SComparison";
 import {Negation} from "./Negation";
 import {Filter} from "./Filter";
 import {Key} from "./Key";
 import {SKey} from "./SKey";
 import {MKey} from "./MKey";
-import {Columns} from "./Columns";
 import {InsightError} from "./IInsightFacade";
-import { IdString } from "./IdString";
+import {IdString} from "./IdString";
 import Log from "../Util";
 
 export class QueryHandler {
@@ -26,19 +25,33 @@ export class QueryHandler {
 
     public static validQuery(parsedQuery: Query): boolean {
         // Should work for now, .key.key probably need to be changed
-        let key: SKey | MKey = parsedQuery.options.key.key;
-        let columnKeys: Key[] = parsedQuery.options.columns.keys;
-        let validKey = false;
 
-        // Checks for if 'Order': key is in columns
-        for (let i in columnKeys) {
-            if (columnKeys[i].key.field === key.field) {
-                validKey = true;
-                break;
+        // TODO this should thrown an InsightError when its not valid to describe why it failed and then this
+        //  will no longer need to return a bool at all
+        let key: SKey | MKey ;
+        // Make sure that there in an Order before setting key (rename)
+        if (parsedQuery.options.key) {
+            key =  parsedQuery.options.key.key;
+        }
+        let columnKeys: Key[] = parsedQuery.options.columns.keys;
+        // Not sure if there is an Order key yet so set to true by default
+        let validKey = true;
+
+        // Make sure that there is an order key
+        if (key) {
+            // If there is an order key then set valid key to false by default
+            validKey = false;
+            // Checks for if 'Order': key is in columns
+            for (let i in columnKeys) {
+                if (columnKeys[i].key.field === key.field) {
+                    validKey = true;
+                    break;
+                }
             }
         }
         if (!validKey) {
-            return false;
+            throw (new InsightError("Order key is not in Columns"));
+            // return false;
         }
 
         // Checks if Query is referencing more than one dataset
@@ -50,7 +63,8 @@ export class QueryHandler {
         // Every Id in keyIds should be the exact same
         for (let i in keyIds) {
             if (keyIds[0].idString !== keyIds[i].idString) {
-                return false;
+                throw (new InsightError("Query references multiple datasets"));
+                // return false;
             }
         }
         return true;
@@ -71,6 +85,7 @@ export class QueryHandler {
         // Log.trace(activeDataset.sections);
         for (let section of activeDataset.sections) {
             if (QueryHandler.matchesFilter(query.body.filter, section)) {
+                // Log.trace("yay matches");
                 retval.push(section);
             }
             // TODO check if the section meets the query
@@ -92,7 +107,7 @@ export class QueryHandler {
             //     avgtst_dept: sdfsdf,
             // }
             for ( let i in section) {
-                Log.trace(i);
+                // Log.trace(i);
                 // TODO check if the current key is any of the keys in options.columns
                 //  then add that keys value to curObj in the correct field
             }
@@ -124,7 +139,10 @@ export class QueryHandler {
         for (let i in options.columns.keys) {
             ids.push(options.columns.keys[i].key.idString);
         }
-        ids.push(options.key.key.idString);
+        // Make sure that there is an ORDER key
+        if (options.key) {
+            ids.push(options.key.key.idString);
+        }
     }
 
     private static matchesQueryLogicComp(logicComparison: LogicComparison, section: Section): boolean {
@@ -132,6 +150,8 @@ export class QueryHandler {
         //  If its or pass as soon as one is true and fail if none are true
         let sectionResult: boolean;
         for ( let i of logicComparison.filters) {
+            // Log.trace("in Logic loop");
+            // Log.trace(i);
             sectionResult = QueryHandler.matchesFilter(i, section);
             if (logicComparison.logic === Logic.AND) {
                 if (!sectionResult) {
@@ -145,24 +165,40 @@ export class QueryHandler {
                 }
             }
         }
-        return false;
-    }
-
-
-    private static matchesQueryMComparison(mComparison: MComparison, section: Section): boolean {
-
-        // TODO switch on mComarator and do right thing
-        // Below if is wrong look prev line
-        if (section[mComparison.mKey.field] === mComparison.num) {
+        if (logicComparison.logic === Logic.AND) {
             return true;
         } else {
             return false;
         }
+
+    }
+
+
+    private static matchesQueryMComparison(mComparison: MComparison, section: Section): boolean {
+        switch (mComparison.mComparator) {
+            case MComparator.EQ:
+                return section[mComparison.mKey.field] === mComparison.num;
+            case MComparator.GT:
+                return section[mComparison.mKey.field] > mComparison.num;
+            case MComparator.LT:
+                return section[mComparison.mKey.field] < mComparison.num;
+            default:
+                throw (new InsightError("invalid MComparator"));
+        }
     }
 
     private static matchesQuerySComparison(sComparison: SComparison, section: Section): boolean {
-        // TODO implement
-        return false;
+        if (sComparison.firstWild && !sComparison.secondWild) {
+            return section[sComparison.sKey.field].endsWith(sComparison.inputString.inputString);
+        }
+        if (!sComparison.firstWild && sComparison.secondWild) {
+            return section[sComparison.sKey.field].startsWith(sComparison.inputString.inputString);
+        }
+        if (sComparison.firstWild && sComparison.secondWild) {
+            return section[sComparison.sKey.field].includes(sComparison.inputString.inputString);
+        }
+        // If none of the above are hit then there are no wildcards and the sections string must equal the query input
+        return section[sComparison.sKey.field] === sComparison.inputString.inputString;
     }
 
     private static matchesQueryNegation(negation: Negation, section: Section): boolean {
@@ -170,6 +206,10 @@ export class QueryHandler {
     }
 
     private static matchesFilter(filter: Filter, section: Section): boolean {
+        if (!filter) {
+            return true;
+        }
+        // Log.trace(filter);
         if (filter.logicComparison) {
             return QueryHandler.matchesQueryLogicComp(filter.logicComparison, section);
         } else if (filter.mComparison) {

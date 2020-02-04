@@ -4,7 +4,6 @@ import {InsightError} from "./IInsightFacade";
 export class InputString {
     constructor(input: string) {
         if (input.includes("*")) {
-            // Log.trace("invalid InputString");
             throw (new InsightError("Invalid InputString"));
         }
         this.inputString = input;
