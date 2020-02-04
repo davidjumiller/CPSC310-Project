@@ -118,7 +118,22 @@ export class QueryHandler {
             }
             retval.push(curObj);
         }
+
         // TODO sort retval on options.key if there is one
+        if (options.key.key) {
+            let sortBy: string = options.key.key.idString.idString + "_" + options.key.key.field;
+            retval.sort(function (a: any, b: any) {
+                if (a[sortBy] < b[sortBy]) {
+                    return -1;
+                }
+                if (a[sortBy] > b[sortBy]) {
+                    return 1;
+                }
+                return 0;
+            });
+            // this.sort(retval, 0, retval.length - 1);
+        }
+
         return retval;
     }
 
