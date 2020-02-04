@@ -13,6 +13,7 @@ import {MKey} from "./MKey";
 import {Columns} from "./Columns";
 import {InsightError} from "./IInsightFacade";
 import { IdString } from "./IdString";
+import Log from "../Util";
 
 export class QueryHandler {
 
@@ -24,6 +25,8 @@ export class QueryHandler {
     }
 
     public static validQuery(parsedQuery: Query): boolean {
+        // hack for now by Alex
+        return true;
         // Should work for now, .key.key probably need to be changed
         let key: SKey | MKey = parsedQuery.options.key.key;
         let columnKeys: Key[] = parsedQuery.options.columns.keys;
@@ -77,12 +80,28 @@ export class QueryHandler {
         return retval;
     }
 
-    public static executeOptions(options:  Options): string[] {
-        return [];
-    }
 
-    public static filterWithOptions(selectedSections: Section[], selectedFields: string[]): any[] {
-        return [];
+    // TODO delete this method because its not needed. Columns already has all the info we need
+    // public static executeOptions(options:  Options): string[] {
+    //     return [];
+    // }
+
+    public static filterWithOptions(selectedSections: Section[], options: Options): any[] {
+        let retval: any[] = [];
+        for (let section of selectedSections) {
+            let curObj: any [];
+            // {avgtst_avg: sdfsd,
+            //     avgtst_dept: sdfsdf,
+            // }
+            for ( let i in section) {
+                Log.trace(i);
+                // TODO check if the current key is any of the keys in options.columns
+                //  then add that keys value to curObj in the correct field
+            }
+            retval.push(curObj);
+        }
+        // TODO sort retval on options.key if there is one
+        return retval;
     }
 
     private static findBodyKeyIds(ids: &IdString[], filter: Filter) {
