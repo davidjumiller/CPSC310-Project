@@ -25,8 +25,6 @@ export class QueryHandler {
     }
 
     public static validQuery(parsedQuery: Query): boolean {
-        // hack for now by Alex
-        return true;
         // Should work for now, .key.key probably need to be changed
         let key: SKey | MKey = parsedQuery.options.key.key;
         let columnKeys: Key[] = parsedQuery.options.columns.keys;
@@ -34,7 +32,7 @@ export class QueryHandler {
 
         // Checks for if 'Order': key is in columns
         for (let i in columnKeys) {
-            if (columnKeys[i].key === key) {
+            if (columnKeys[i].key.field === key.field) {
                 validKey = true;
                 break;
             }
