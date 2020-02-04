@@ -107,20 +107,38 @@ describe("InsightFacade Add/Remove Dataset", function () {
 
     it("Mock test to help develop perform query", function () {
         // This should fail eventually because the dataset in the query is not avgtst
-        const id: string = "avgtst";
+        const id: string = "courses";
         const expected: string[] = [id];
         return insightFacade
             .addDataset(id, datasets[id], InsightDatasetKind.Courses)
             .then((result: string[]) => {
                 return insightFacade.performQuery({
                     WHERE: {
-                        EQ: {
-                            avgtst_avg: 50
-                        }
+                        AND: [
+                            {
+                                EQ: {
+                                    courses_avg: 50
+                                }
+                            },
+                            {
+                                IS: {
+                                    courses_dept: "busi"
+                                }
+                            }
+                        ]
                     },
                     OPTIONS: {
                         COLUMNS: [
-                            "avgtst_dept"
+                            "courses_dept",
+                            "courses_id",
+                            "courses_instructor",
+                            "courses_title",
+                            "courses_uuid",
+                            "courses_avg",
+                            "courses_pass",
+                            "courses_fail",
+                            "courses_audit",
+                            "courses_year"
                         ]
                     }
                 })

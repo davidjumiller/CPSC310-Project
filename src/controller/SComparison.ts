@@ -15,8 +15,15 @@ export class SComparison {
             // Log.trace("error in SComparison");
         }
 
+        if (keys.length === 0) {
+            throw( new InsightError("Scomparison is empty"));
+        }
+
         this.sKey = new SKey(keys[0]);
         // Log.trace(queryElement[keys[0]]);
+        if (typeof queryElement[keys[0]] !== "string") {
+            throw (new InsightError("Scomparison was not given a string"));
+        }
         let input: string = queryElement[keys[0]];
         if (input.charAt(0) === "*") {
             // Log.trace("first");

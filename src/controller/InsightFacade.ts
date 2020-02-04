@@ -181,10 +181,10 @@ export default class InsightFacade implements IInsightFacade {
                 curSection.audit = section[fieldName];
                 break;
             case "id":
-                curSection.uuid = section[fieldName];
+                curSection.uuid = String(section[fieldName]);
                 break;
             case "Year":
-                curSection.year = section[fieldName];
+                curSection.year = Number(section[fieldName]);
                 break;
         }
     }

@@ -17,6 +17,9 @@ export class MComparison {
             throw (new InsightError("too many keys in MComparison"));
             // Log.trace("error in MComparison");
         }
+        if (keys.length === 0) {
+            throw  (new InsightError("Mcomparison is empty"));
+        }
 
         // Figure out which MComparator is used
         switch (keys[0]) {
@@ -42,9 +45,15 @@ export class MComparison {
             throw (new InsightError("Too many MKey's in MComparison"));
             // Log.trace("error in MComparison");
         }
+        // Make sure that the MComarison isn't empty
+        if (mKeys.length === 0) {
+            throw (new InsightError("there are no keys in Mcomparator"));
+        }
         this.mKey = new MKey(mKeys[0]);
         if (typeof mkeyNumPair[mKeys[0]] === "number") {
             this.num = mkeyNumPair[mKeys[0]];
+        } else {
+            throw (new InsightError("Mcomparator was not given a number"));
         }
     }
 
