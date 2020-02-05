@@ -119,7 +119,6 @@ export class QueryHandler {
             retval.push(curObj);
         }
 
-        // TODO sort retval on options.key if there is one
         if (options.key) {
             let sortBy: string = options.key.key.idString.idString + "_" + options.key.key.field;
             let sortDept: string = options.key.key.idString.idString + "_dept";

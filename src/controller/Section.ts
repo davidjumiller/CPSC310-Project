@@ -1,6 +1,7 @@
 export class Section {
     // This lets us index with a variable Thanks lint!
     [index: string]: any;
+    public section: string;
     public dept: string;
     public id: string;
     public avg: number;

@@ -29,7 +29,8 @@ export default class InsightFacade implements IInsightFacade {
         return true;
     }
     private static isSectionValid(curSection: Section): boolean {
-        if (curSection.title === undefined || curSection.instructorBlank === undefined || curSection.id === undefined
+        if (curSection.section === undefined || curSection.title === undefined ||
+            curSection.instructorBlank === undefined || curSection.id === undefined
             || curSection.audit === undefined || curSection.avg === undefined || curSection.dept === undefined ||
             curSection.fail === undefined || curSection.pass === undefined || curSection.uuid === undefined ||
             curSection.year === undefined) {
@@ -152,6 +153,12 @@ export default class InsightFacade implements IInsightFacade {
 
     private static findValidFields(fieldName: string, curSection: Section, section: any) {
         switch (fieldName) {
+            case "Section":
+                if (section[fieldName] === "overall") {
+                    curSection.year = 1900;
+                }
+                curSection.section = section[fieldName];
+                break;
             case "Subject":
                 curSection.dept = section[fieldName];
                 break;
@@ -181,7 +188,11 @@ export default class InsightFacade implements IInsightFacade {
                 curSection.uuid = String(section[fieldName]);
                 break;
             case "Year":
-                curSection.year = Number(section[fieldName]);
+                // This if statement checks to make sure year was not
+                // already set to 1900 because Section = "overall"
+                if (!curSection.year) {
+                    curSection.year = Number(section[fieldName]);
+                }
                 break;
         }
     }
