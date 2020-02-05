@@ -1,5 +1,5 @@
 {
-    "title": "Check bad input string BAD TEST THIS SHOULD FAIL WITH TOO LARGE",
+    "title": "Check bad input string, works but results too large",
     "query":
     {
         "WHERE": {
@@ -17,5 +17,5 @@
     }
 ,
     "isQueryValid": false,
-    "result": "ResultsToLarge"
+    "result": "ResultTooLargeError"
 }

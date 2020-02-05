@@ -1,5 +1,5 @@
 {
-    "title": "Check more than one Order fails with InsightError",
+    "title": "Too many orders works",
     "query":
     {
         "WHERE": {
@@ -21,6 +21,6 @@
         }
     }
 ,
-    "isQueryValid": false,
-    "result": "InsightError"
+    "isQueryValid": true,
+    "result":[{"courses_uuid":"78941","courses_title":"childhood & adol"},{"courses_uuid":"56484","courses_title":"proc ctrl eng"},{"courses_uuid":"11135","courses_title":"rl es manage i"}]
 }

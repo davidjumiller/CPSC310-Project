@@ -17,6 +17,6 @@
         }
     }
 ,
-    "isQueryValid": false,
-    "result": "InsightError"
+    "isQueryValid": true,
+    "result":[{"courses_dept":"psyc","courses_avg":50},{"courses_dept":"chbe","courses_avg":50},{"courses_dept":"busi","courses_avg":50}]
 }
