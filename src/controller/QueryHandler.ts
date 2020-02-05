@@ -120,7 +120,7 @@ export class QueryHandler {
         }
 
         // TODO sort retval on options.key if there is one
-        if (options.key.key) {
+        if (options.key) {
             let sortBy: string = options.key.key.idString.idString + "_" + options.key.key.field;
             retval.sort(function (a: any, b: any) {
                 if (a[sortBy] < b[sortBy]) {
