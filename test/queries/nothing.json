@@ -1,0 +1,9 @@
+{
+    "title": "Check fails when there is nothing in the query",
+    "query":
+    {
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

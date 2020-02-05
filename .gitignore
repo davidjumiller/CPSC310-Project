@@ -2,6 +2,7 @@
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 
+.nyc_output/
 node_modules/
 coverage/
 src/*.js

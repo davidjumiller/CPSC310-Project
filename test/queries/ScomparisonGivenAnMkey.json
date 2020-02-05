@@ -1,0 +1,28 @@
+{
+    "title": "Check that is fails if it is given an Mkey",
+    "query":
+    {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_avg": "busi"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_avg"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

@@ -1,0 +1,19 @@
+{
+    "title": "Check LT for audit",
+    "query":
+    {
+        "WHERE": {
+            "LT": {
+                "courses_audit": 0
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": []
+}

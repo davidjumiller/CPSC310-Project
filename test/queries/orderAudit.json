@@ -1,0 +1,34 @@
+{
+    "title": "Check Order on audit",
+    "query":
+    {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_audit"
+            ],
+            "ORDER": "courses_audit"
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_audit": 0
+        },
+        {
+            "courses_audit": 0
+        },
+        {
+            "courses_audit": 0
+        }
+    ]
+}

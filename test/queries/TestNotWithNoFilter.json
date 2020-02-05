@@ -1,0 +1,20 @@
+{
+    "title": "Check that NOT fails if it has no filter in it",
+    "query":
+    {
+        "WHERE": {
+            "NOT":{
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept",
+                "courses_avg"
+            ],
+            "ORDER": "courses_avg"
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

@@ -1,0 +1,28 @@
+{
+    "title": "Check * at beginning and end of inputstring works in IS",
+    "query":
+    {
+        "WHERE": {
+            "AND": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": "b*si"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

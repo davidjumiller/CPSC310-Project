@@ -1,0 +1,23 @@
+{
+    "title": "Check Greater Than normal case",
+    "query":
+    {
+        "WHERE": {
+            "GT":{
+                "avgtst_avg": 50
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "avgtst_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "avgtst_dept": "cpsc"
+        }
+    ]
+}

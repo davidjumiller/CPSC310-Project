@@ -1,0 +1,35 @@
+{
+    "title": "Check GT for fail",
+    "query":
+    {
+        "WHERE": {
+            "GT": {
+                "courses_fail": 250
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "chem"
+        },
+        {
+            "courses_dept": "chem"
+        },
+        {
+            "courses_dept": "chem"
+        },
+        {
+            "courses_dept": "chem"
+        },
+        {
+            "courses_dept": "chem"
+        }
+    ]
+}

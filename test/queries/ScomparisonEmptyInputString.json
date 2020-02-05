@@ -1,0 +1,28 @@
+{
+    "title": "Check that an empty input string works",
+    "query":
+    {
+        "WHERE": {
+            "AND": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": ""
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": []
+}

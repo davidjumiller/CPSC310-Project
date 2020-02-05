@@ -1,0 +1,22 @@
+{
+    "title": "Test Not filter with a valid output",
+    "query":
+    {
+        "WHERE": {
+            "NOT":{
+                "EQ":{
+                    "courses_avg":50
+                }
+            }
+
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "ResultTooLargeError"
+}

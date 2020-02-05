@@ -1,0 +1,31 @@
+{
+    "title": "Check AND one filter",
+    "query":
+    {
+        "WHERE": {
+            "AND":[{
+                "EQ":{
+                    "courses_avg":50
+                }
+            }]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "busi"
+        },
+        {
+            "courses_dept": "chbe"
+        },
+        {
+            "courses_dept": "psyc"
+        }
+    ]
+}

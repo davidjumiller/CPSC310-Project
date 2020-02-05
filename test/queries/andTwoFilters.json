@@ -1,0 +1,32 @@
+{
+    "title": "Check AND two filters",
+    "query":
+    {
+        "WHERE": {
+            "AND":[
+                {
+                    "EQ":{
+                        "courses_avg":50
+                    }
+                },
+                {
+                    "IS":{
+                        "courses_dept":"busi"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "busi"
+        }
+    ]
+}

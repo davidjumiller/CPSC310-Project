@@ -1,0 +1,28 @@
+{
+    "title": "Check that is fails if it is given an invalid column key",
+    "query":
+    {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": "busi"
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_foo"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

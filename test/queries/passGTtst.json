@@ -1,0 +1,35 @@
+{
+    "title": "Check GT for pass",
+    "query":
+    {
+        "WHERE": {
+            "GT": {
+                "courses_pass": 2500
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "courses_dept": "engl"
+        },
+        {
+            "courses_dept": "engl"
+        },
+        {
+            "courses_dept": "engl"
+        },
+        {
+            "courses_dept": "engl"
+        },
+        {
+            "courses_dept": "engl"
+        }
+    ]
+}

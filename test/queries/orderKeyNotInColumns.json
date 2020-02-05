@@ -1,0 +1,24 @@
+{
+    "title": "Check that is fails if it is given an order key not in columns",
+    "query":
+    {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_avg"
+            ],
+            "ORDER": "courses_dept"
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

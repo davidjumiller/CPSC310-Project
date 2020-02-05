@@ -1,0 +1,23 @@
+{
+    "title": "Check equal normal case",
+    "query":
+    {
+        "WHERE": {
+            "EQ":{
+                "avgtst_avg": 50
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "avgtst_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "avgtst_dept": "cpsc"
+        }
+    ]
+}

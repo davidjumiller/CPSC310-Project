@@ -1,0 +1,28 @@
+{
+    "title": "Check that is fails if it is passed a number",
+    "query":
+    {
+        "WHERE": {
+            "OR": [
+                {
+                    "EQ": {
+                        "courses_avg": 50
+                    }
+                },
+                {
+                    "IS": {
+                        "courses_dept": 100
+                    }
+                }
+            ]
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

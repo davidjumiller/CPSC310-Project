@@ -1,0 +1,29 @@
+{
+    "title": "Check invalid skey in IS fails",
+    "query":
+    {
+        "WHERE": {
+            "IS": {
+                "avgtst_dept": "cpsc"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "avgtst_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result": [
+        {
+            "avgtst_dept" : "cpsc"
+        },
+        {
+            "avgtst_dept" : "cpsc"
+        },
+        {
+            "avgtst_dept" : "cpsc"
+        }
+    ]
+}

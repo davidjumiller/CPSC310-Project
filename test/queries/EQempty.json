@@ -1,0 +1,17 @@
+{
+    "title": "Check that EQ fails if it is empty",
+    "query":
+    {
+        "WHERE": {
+            "EQ": {}
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "courses_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}

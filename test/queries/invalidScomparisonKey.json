@@ -1,0 +1,19 @@
+{
+    "title": "Check invalid SCOMPARISON key",
+    "query":
+    {
+        "WHERE": {
+            "I":{
+                "avgtst_id": "100"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "avgtst_dept"
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}
