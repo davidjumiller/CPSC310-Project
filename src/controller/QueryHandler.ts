@@ -120,8 +120,9 @@ export class QueryHandler {
         }
 
         // TODO sort retval on options.key if there is one
-        if (options.key.key) {
+        if (options.key) {
             let sortBy: string = options.key.key.idString.idString + "_" + options.key.key.field;
+            let sortDept: string = options.key.key.idString.idString + "_dept";
             retval.sort(function (a: any, b: any) {
                 if (a[sortBy] < b[sortBy]) {
                     return -1;
@@ -129,11 +130,17 @@ export class QueryHandler {
                 if (a[sortBy] > b[sortBy]) {
                     return 1;
                 }
+                if (a[sortBy] === b[sortBy]) {
+                    if (a[sortDept] < b[sortDept]) {
+                        return 1;
+                    }
+                    if (a[sortDept] > b[sortDept]) {
+                        return -1;
+                    }
+                }
                 return 0;
             });
-            // this.sort(retval, 0, retval.length - 1);
         }
-
         return retval;
     }
 

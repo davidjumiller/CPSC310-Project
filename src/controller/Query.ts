@@ -9,17 +9,21 @@ export class Query {
     public options: Options;
     public datasetID: string;
 
-    private static  getDatasetId(filter: Filter): string {
+    private getDatasetId(filter: Filter): string {
         // TODO this has to check the Columns if there is no filter because an empty filter is valid
         // I am not 100% sure this works but it works for my one test case at least
-        if (filter.negation) {
-            return Query.getDatasetId(filter.negation.filter);
-        } else if ( filter.sComparison) {
-            return filter.sComparison.sKey.idString.idString;
-        } else if (filter.mComparison) {
-            return filter.mComparison.mKey.idString.idString;
-        } else if (filter.logicComparison) {
-            return Query.getDatasetId(filter.logicComparison.filters[0]);
+        if (filter) {
+            if (filter.negation) {
+                return this.getDatasetId(filter.negation.filter);
+            } else if ( filter.sComparison) {
+                return filter.sComparison.sKey.idString.idString;
+            } else if (filter.mComparison) {
+                return filter.mComparison.mKey.idString.idString;
+            } else if (filter.logicComparison) {
+                return this.getDatasetId(filter.logicComparison.filters[0]);
+            }
+        } else {
+            return this.options.columns.keys[0].key.idString.idString;
         }
     }
     constructor(query: any) {
@@ -31,7 +35,6 @@ export class Query {
                 if (i === "WHERE") {
                     // Log.trace("body added");
                     this.body = new Body(query[i]);
-                    this.datasetID = Query.getDatasetId(this.body.filter);
                     // Log.trace(query[i]);
                 } else {
                     throw( new InsightError("Invalid first key in Query"));
@@ -54,5 +57,6 @@ export class Query {
         if (!this.body || !this.options) {
             throw (new InsightError("invalid query"));
         }
+        this.datasetID = this.getDatasetId(this.body.filter);
     }
 }

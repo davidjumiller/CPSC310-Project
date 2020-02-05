@@ -29,7 +29,7 @@ export default class InsightFacade implements IInsightFacade {
         return true;
     }
     private static isSectionValid(curSection: Section): boolean {
-        if (curSection.title === undefined || curSection.instructor === undefined || curSection.id === undefined
+        if (curSection.title === undefined || curSection.instructorBlank === undefined || curSection.id === undefined
             || curSection.audit === undefined || curSection.avg === undefined || curSection.dept === undefined ||
             curSection.fail === undefined || curSection.pass === undefined || curSection.uuid === undefined ||
             curSection.year === undefined) {
@@ -162,11 +162,8 @@ export default class InsightFacade implements IInsightFacade {
                 curSection.avg = section[fieldName];
                 break;
             case "Professor":
-                if (section[fieldName] === "") {
-                    curSection.instructor = " ";
-                } else {
-                    curSection.instructor = section[fieldName];
-                }
+                curSection.instructor = section[fieldName];
+                curSection.instructorBlank = true;
                 break;
             case "Title":
                 curSection.title = section[fieldName];

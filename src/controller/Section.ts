@@ -5,6 +5,7 @@ export class Section {
     public id: string;
     public avg: number;
     public instructor: string;
+    public instructorBlank: boolean;
     public title: string;
     public pass: number;
     public fail: number;
