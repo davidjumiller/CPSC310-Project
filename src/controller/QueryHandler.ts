@@ -145,20 +145,23 @@ export class QueryHandler {
     }
 
     private static findBodyKeyIds(ids: &IdString[], filter: Filter) {
-        // Note: filter should not be valid if there is more than one of these, but this function does not check this
-        if (filter.logicComparison !== undefined) {
-            for (let i in filter.logicComparison.filters) {
-                this.findBodyKeyIds(ids, filter.logicComparison.filters[i]);
+        if (filter) {
+            // Note: filter should not be valid if there is more than one of these,
+            // but this function does not check this
+            if (filter.logicComparison !== undefined) {
+                for (let i in filter.logicComparison.filters) {
+                    this.findBodyKeyIds(ids, filter.logicComparison.filters[i]);
+                }
             }
-        }
-        if (filter.mComparison !== undefined) {
-            ids.push(filter.mComparison.mKey.idString);
-        }
-        if (filter.sComparison !== undefined) {
-            ids.push(filter.sComparison.sKey.idString);
-        }
-        if (filter.negation !== undefined) {
-            this.findBodyKeyIds(ids, filter.negation.filter);
+            if (filter.mComparison !== undefined) {
+                ids.push(filter.mComparison.mKey.idString);
+            }
+            if (filter.sComparison !== undefined) {
+                ids.push(filter.sComparison.sKey.idString);
+            }
+            if (filter.negation !== undefined) {
+                this.findBodyKeyIds(ids, filter.negation.filter);
+            }
         }
     }
 
