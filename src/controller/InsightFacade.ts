@@ -134,6 +134,9 @@ export default class InsightFacade implements IInsightFacade {
             // Push the newly added dataset onto the list of datasets then walk
             // through all the added datasets and get their id's
             // let ids: string[] = [];
+            if (rows === 0) {
+                Promise.reject(new InsightError("no valid sections"));
+            }
             const isd: InsightDataset = {id: id, kind: InsightDatasetKind.Courses, numRows: rows};
             const newDataset: Dataset = new Dataset(isd, sections);
             reference.datasets.push(newDataset);
