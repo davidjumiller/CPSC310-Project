@@ -23,6 +23,8 @@ describe("InsightFacade Add/Remove Dataset", function () {
         courses: "./test/data/courses.zip",
         fluff: "./test/data/courses.zip",
         avgtst: "./test/data/dataForAvgsTests.zip",
+        emptyCourses: "./test/data/emptyCourses.zip",
+        courses2: "./test/data/dataWithCoursesFolderRenamed.zip",
         invalidDataSet: "./test/data/invalidData.zip",
         oneBadFile: "./test/data/oneBadFile.zip",
     };
@@ -160,7 +162,46 @@ describe("InsightFacade Add/Remove Dataset", function () {
         return insightFacade
             .addDataset(id, datasets[id], InsightDatasetKind.Courses)
             .then((result: string[]) => {
-                expect.fail(result, expected, "Should not have rejected");
+                expect.fail(result, expected, "Should have rejected");
+            })
+            .catch((err: any) => {
+                expect(err).instanceOf(InsightError);
+            });
+    });
+
+    it("Should fail to find a dataset that doesnt exist", function () {
+        const id: string = "datasetThatDoesntExist";
+        const expected: string[] = [id];
+        return insightFacade
+            .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+            .then((result: string[]) => {
+                expect.fail(result, expected, "Should have rejected");
+            })
+            .catch((err: any) => {
+                expect(err).instanceOf(InsightError);
+            });
+    });
+
+    it("Should fail to add a dataset with the inner courses folder changed to courses2", function () {
+        const id: string = "courses2";
+        const expected: string[] = [id];
+        return insightFacade
+            .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+            .then((result: string[]) => {
+                expect.fail(result, expected, "Should have rejected");
+            })
+            .catch((err: any) => {
+                expect(err).instanceOf(InsightError);
+            });
+    });
+
+    it("Should fail to add a zip with no valid courses", function () {
+        const id: string = "emptyCourses";
+        const expected: string[] = [id];
+        return insightFacade
+            .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+            .then((result: string[]) => {
+                expect.fail(result, expected, "Should have rejected");
             })
             .catch((err: any) => {
                 expect(err).instanceOf(InsightError);

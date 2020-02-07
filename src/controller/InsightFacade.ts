@@ -66,7 +66,9 @@ export default class InsightFacade implements IInsightFacade {
         let reference: InsightFacade = this;
         let ids: string[] = [];
         for (let i in reference.datasets) {
-            if (id === reference.datasets[i].isd.id) { return Promise.reject(new InsightError()); }
+            if (id === reference.datasets[i].isd.id) {
+                return Promise.reject(new InsightError("Can't add two datasets with the same ID"));
+            }
             ids.push(reference.datasets[i].isd.id);
         }
 
@@ -81,7 +83,7 @@ export default class InsightFacade implements IInsightFacade {
                     // This "accidentaly" stops situations like a courses dataset being added as a rooms dataset
                     //  This should be good for this sprint but it will need to be looked at more when we add rooms
                     if (!relativePath.startsWith("courses/")) {
-                        return reject(new InsightError());
+                        return reject(new InsightError("The dataset does not have a root folder of courses/"));
                     }
                     // let Sections: Section[] = [];
                     // I had to add this because for some reason the first iteration of the courses test was NULL
@@ -94,7 +96,7 @@ export default class InsightFacade implements IInsightFacade {
                 // Once all of the files have finished being read continue
                 this.CreateAllSectionsFromLoadedFiles(promises, sections, rows, id, reference, ids, resolve, reject);
                 }).catch((error: any) => {
-                    Log.trace("Why mad");
+                    // Log.trace("Why mad");
                 // This should catch any bad ZIP files
                     return reject(new InsightError(error));
                 });
@@ -134,6 +136,9 @@ export default class InsightFacade implements IInsightFacade {
             // Push the newly added dataset onto the list of datasets then walk
             // through all the added datasets and get their id's
             // let ids: string[] = [];
+            if (rows === 0) {
+                return Promise.reject(new InsightError("no valid sections"));
+            }
             const isd: InsightDataset = {id: id, kind: InsightDatasetKind.Courses, numRows: rows};
             const newDataset: Dataset = new Dataset(isd, sections);
             reference.datasets.push(newDataset);
@@ -201,15 +206,19 @@ export default class InsightFacade implements IInsightFacade {
         if (!this.validID(id)) {
             return Promise.reject(new InsightError("Invalid ID" + id));
         }
-        for (let i in this.datasets) {
-            if (id === this.datasets[i].isd.id) {
-                fs.removeSync("./data/" + this.datasets[i].isd.id + ".json");
-                // This should remove the array element
-                this.datasets.splice(parseInt(i, 10) , 1);
-                return Promise.resolve(id);
+        try {
+            for (let i in this.datasets) {
+                if (id === this.datasets[i].isd.id) {
+                    fs.removeSync("./data/" + this.datasets[i].isd.id + ".json");
+                    // This should remove the array element
+                    this.datasets.splice(parseInt(i, 10), 1);
+                    return Promise.resolve(id);
+                }
             }
+            return Promise.reject(new NotFoundError(id + " has not been added yet"));
+        } catch (e) {
+            return  Promise.reject(new InsightError("remove failed"));
         }
-        return Promise.reject(new NotFoundError(id + " has not been added yet"));
     }
 
     public performQuery(query: any): Promise<any[]> {
