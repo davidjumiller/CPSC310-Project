@@ -206,15 +206,19 @@ export default class InsightFacade implements IInsightFacade {
         if (!this.validID(id)) {
             return Promise.reject(new InsightError("Invalid ID" + id));
         }
-        for (let i in this.datasets) {
-            if (id === this.datasets[i].isd.id) {
-                fs.removeSync("./data/" + this.datasets[i].isd.id + ".json");
-                // This should remove the array element
-                this.datasets.splice(parseInt(i, 10) , 1);
-                return Promise.resolve(id);
+        try {
+            for (let i in this.datasets) {
+                if (id === this.datasets[i].isd.id) {
+                    fs.removeSync("./data/" + this.datasets[i].isd.id + ".json");
+                    // This should remove the array element
+                    this.datasets.splice(parseInt(i, 10), 1);
+                    return Promise.resolve(id);
+                }
             }
+            return Promise.reject(new NotFoundError(id + " has not been added yet"));
+        } catch (e) {
+            return  Promise.reject(new InsightError("remove failed"));
         }
-        return Promise.reject(new NotFoundError(id + " has not been added yet"));
     }
 
     public performQuery(query: any): Promise<any[]> {
