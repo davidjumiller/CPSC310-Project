@@ -22,6 +22,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
     const datasetsToLoad: { [id: string]: string } = {
         courses: "./test/data/courses.zip",
         fluff: "./test/data/courses.zip",
+        foo_fum: "./test/data/courses.zip",
         avgtst: "./test/data/dataForAvgsTests.zip",
         emptyCourses: "./test/data/emptyCourses.zip",
         courses2: "./test/data/dataWithCoursesFolderRenamed.zip",
@@ -350,6 +351,34 @@ describe("InsightFacade Add/Remove Dataset", function () {
             });
     });
 
+    it("Should remove one dataset and then fail to query the removed dataset", function () {
+        let testQueries: ITestQuery[] = [];
+        testQueries = TestUtil.readTestQueries();
+        const id: string = "courses";
+        return insightFacade
+            .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+            .then((ignoreResult: string[]) => {
+                insightFacade
+                    .removeDataset(id)
+                    .then((result: string) => {
+                        insightFacade
+                            .performQuery(testQueries[0].query)
+                            .then(() => {
+                                expect.fail("Should have rejected");
+                            })
+                            .catch((error: any) => {
+                                expect(error).instanceOf(InsightError);
+                            });
+                    })
+                    .catch((error: any) => {
+                        expect.fail(error, id, "Should not have rejected");
+                    });
+            })
+            .catch((err: any) => {
+                expect.fail(err, id, "Should not have rejected " + err);
+            });
+    });
+
     it("should fail to remove one dataset because it hasn't been added yet", function () {
         const idToDelete: string = "courses";
         const id: string = "fluff";
@@ -384,6 +413,18 @@ describe("InsightFacade Add/Remove Dataset", function () {
 
     it("should fail to remove dataset due to invalid id (all whitespace)", function () {
         const id: string = "   ";
+        return insightFacade
+            .removeDataset(id)
+            .then((result: string) => {
+                expect.fail(result, "", "should have been rejected");
+            })
+            .catch((err: any) => {
+                expect(err).instanceOf(InsightError);
+            });
+    });
+
+    it("should fail to remove dataset due to invalid id (empty string)", function () {
+        const id: string = "";
         return insightFacade
             .removeDataset(id)
             .then((result: string) => {
