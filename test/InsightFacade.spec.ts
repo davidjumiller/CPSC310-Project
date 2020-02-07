@@ -82,6 +82,27 @@ describe("InsightFacade Add/Remove Dataset", function () {
             });
     });
 
+    it("Should remove a dataset that has been read from disk", function () {
+        const id: string = "courses";
+        const expected: string[] = [id];
+        return insightFacade
+            .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+            .then((result2: string[]) => {
+                let insightFacade2: InsightFacade = new InsightFacade();
+                insightFacade2
+                    .removeDataset(id)
+                    .then((result: string) => {
+                        expect(result).to.deep.equal(id);
+                    })
+                    .catch((err: any) => {
+                        expect.fail(err, expected, "Should not have rejected remove " + err);
+                    });
+            })
+            .catch((err: any) => {
+                expect.fail(err, expected, "Should not have rejected " + err);
+            });
+    });
+
     it("Should add a valid dataset but missing one file", function () {
         const id: string = "oneBadFile";
         const expected: string[] = ["oneBadFile"];
@@ -549,6 +570,15 @@ describe("InsightFacade PerformQuery", () => {
     // Load all the test queries, and call addDataset on the insightFacade instance for all the datasets
     before(function () {
         Log.test(`Before: ${this.test.parent.title}`);
+        const cacheDir = __dirname + "/../data";
+
+        try {
+            fs.removeSync(cacheDir);
+            fs.mkdirSync(cacheDir);
+            insightFacade = new InsightFacade();
+        } catch (err) {
+            Log.error(err);
+        }
 
         // Load the query JSON files under test/queries.
         // Fail if there is a problem reading ANY query.
