@@ -52,7 +52,7 @@ export default class InsightFacade implements IInsightFacade {
 
     private static writeDatasetToDisk(newDataset: Dataset) {
         fs.mkdirpSync("./data/");
-        fs.writeJSONSync("./data/" + newDataset.isd.id, newDataset);
+        fs.writeJSONSync("./data/" + newDataset.isd.id + ".json", newDataset);
     }
 
 
