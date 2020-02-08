@@ -41,18 +41,17 @@ export default class InsightFacade implements IInsightFacade {
 
     private static readSavedDatasets(datasets: Dataset[]) {
         // Ensures that there is a parsedDatasets dir
-        fs.readdir("./data/", (err, files) => {
-            // Each file is read into memory
-            files.forEach((file) => {
-                fs.readJSON("./data/" + file, (err2, Obj) => {
-                    if (err2) { Log.trace(err2); }
-                    datasets.push(Obj);
-                });
-            });
+        fs.mkdirpSync("./data/");
+        fs.readdirSync("./data/").forEach((file) => {
+            Log.trace("File found: " + file);
+            let Obj: any = fs.readJSONSync("./data/" + file);
+            datasets.push(Obj);
+            Log.trace("Dataset read from memory: " + Obj);
         });
     }
 
     private static writeDatasetToDisk(newDataset: Dataset) {
+        fs.mkdirpSync("./data/");
         fs.writeJSONSync("./data/" + newDataset.isd.id + ".json", newDataset);
     }
 

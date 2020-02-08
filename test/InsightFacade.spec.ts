@@ -22,6 +22,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
     const datasetsToLoad: { [id: string]: string } = {
         courses: "./test/data/courses.zip",
         fluff: "./test/data/courses.zip",
+        foo_fum: "./test/data/courses.zip",
         avgtst: "./test/data/dataForAvgsTests.zip",
         emptyCourses: "./test/data/emptyCourses.zip",
         courses2: "./test/data/dataWithCoursesFolderRenamed.zip",
@@ -78,6 +79,27 @@ describe("InsightFacade Add/Remove Dataset", function () {
             })
             .catch((err: any) => {
                 expect.fail(err, expected, "Should not have rejected" + err);
+            });
+    });
+
+    it("Should remove a dataset that has been read from disk", function () {
+        const id: string = "courses";
+        const expected: string[] = [id];
+        return insightFacade
+            .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+            .then((result2: string[]) => {
+                let insightFacade2: InsightFacade = new InsightFacade();
+                insightFacade2
+                    .removeDataset(id)
+                    .then((result: string) => {
+                        expect(result).to.deep.equal(id);
+                    })
+                    .catch((err: any) => {
+                        expect.fail(err, expected, "Should not have rejected remove " + err);
+                    });
+            })
+            .catch((err: any) => {
+                expect.fail(err, expected, "Should not have rejected " + err);
             });
     });
 
@@ -350,6 +372,34 @@ describe("InsightFacade Add/Remove Dataset", function () {
             });
     });
 
+    it("Should remove one dataset and then fail to query the removed dataset", function () {
+        let testQueries: ITestQuery[] = [];
+        testQueries = TestUtil.readTestQueries();
+        const id: string = "courses";
+        return insightFacade
+            .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+            .then((ignoreResult: string[]) => {
+                insightFacade
+                    .removeDataset(id)
+                    .then((result: string) => {
+                        insightFacade
+                            .performQuery(testQueries[0].query)
+                            .then(() => {
+                                expect.fail("Should have rejected");
+                            })
+                            .catch((error: any) => {
+                                expect(error).instanceOf(InsightError);
+                            });
+                    })
+                    .catch((error: any) => {
+                        expect.fail(error, id, "Should not have rejected");
+                    });
+            })
+            .catch((err: any) => {
+                expect.fail(err, id, "Should not have rejected " + err);
+            });
+    });
+
     it("should fail to remove one dataset because it hasn't been added yet", function () {
         const idToDelete: string = "courses";
         const id: string = "fluff";
@@ -384,6 +434,18 @@ describe("InsightFacade Add/Remove Dataset", function () {
 
     it("should fail to remove dataset due to invalid id (all whitespace)", function () {
         const id: string = "   ";
+        return insightFacade
+            .removeDataset(id)
+            .then((result: string) => {
+                expect.fail(result, "", "should have been rejected");
+            })
+            .catch((err: any) => {
+                expect(err).instanceOf(InsightError);
+            });
+    });
+
+    it("should fail to remove dataset due to invalid id (empty string)", function () {
+        const id: string = "";
         return insightFacade
             .removeDataset(id)
             .then((result: string) => {
@@ -508,6 +570,15 @@ describe("InsightFacade PerformQuery", () => {
     // Load all the test queries, and call addDataset on the insightFacade instance for all the datasets
     before(function () {
         Log.test(`Before: ${this.test.parent.title}`);
+        const cacheDir = __dirname + "/../data";
+
+        try {
+            fs.removeSync(cacheDir);
+            fs.mkdirSync(cacheDir);
+            insightFacade = new InsightFacade();
+        } catch (err) {
+            Log.error(err);
+        }
 
         // Load the query JSON files under test/queries.
         // Fail if there is a problem reading ANY query.
