@@ -28,6 +28,7 @@ export default class InsightFacade implements IInsightFacade {
         }
         return true;
     }
+
     private static isSectionValid(curSection: Section): boolean {
         if (curSection.section === undefined || curSection.title === undefined ||
             curSection.instructorBlank === undefined || curSection.id === undefined
@@ -57,7 +58,9 @@ export default class InsightFacade implements IInsightFacade {
 
 
     public addDataset(id: string, content: string, kind: InsightDatasetKind): Promise<string[]> {
-        if (!this.validID(id) || kind === InsightDatasetKind.Rooms) {return Promise.reject(new InsightError()); }
+        if (!this.validID(id) || kind === InsightDatasetKind.Rooms) {
+            return Promise.reject(new InsightError());
+        }
         let zip: JSZip = new JSZip();
         let sections: Section[] = [];
         let rows: number = 0;

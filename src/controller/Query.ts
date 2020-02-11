@@ -26,6 +26,7 @@ export class Query {
             return this.options.columns.keys[0].key.idString.idString;
         }
     }
+
     constructor(query: any) {
         // This feels silly im sure ill think of a way to do this not in a loop.
         let inum: number = 0;
