@@ -2,6 +2,7 @@ import {Columns} from "./Columns";
 import {Key} from "./Key";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
+import {Sort} from "./Sort";
 
 export class Options {
     constructor(queryElement: any) {
@@ -19,9 +20,9 @@ export class Options {
             // Log.trace("bad Columns key in options");
         }
 
-        // TODO make sure this works if someone inputs multiple orders
         // Make sure that there is an ORDER because its optional
         if (keys.length === 2) {
+            // TODO Order is deprecated and replaced with sort
             if (keys[1] === "ORDER") {
                 // Log.trace(keys[1]);
                 let order: string = queryElement[keys[1]];
@@ -37,5 +38,6 @@ export class Options {
     }
 
     public columns: Columns;
-    public key: Key;
+    public key: Key; // TODO this is deprecated and replaced with sort
+    public sort: Sort; // can be NULL
 }

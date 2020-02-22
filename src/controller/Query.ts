@@ -3,11 +3,13 @@ import {Options} from "./Options";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
 import {Filter} from "./Filter";
+import {Transformation} from "./Transformation";
 
 export class Query {
     public body: Body;
     public options: Options;
     public datasetID: string;
+    public transformation: Transformation;
 
     private getDatasetId(filter: Filter): string {
         // TODO this has to check the Columns if there is no filter because an empty filter is valid
@@ -23,6 +25,7 @@ export class Query {
                 return this.getDatasetId(filter.logicComparison.filters[0]);
             }
         } else {
+            // TODO this won't work once ANYKEY is implemented into columns will have to find a solution
             return this.options.columns.keys[0].key.idString.idString;
         }
     }

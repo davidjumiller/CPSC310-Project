@@ -1,14 +1,14 @@
 import {Key} from "./Key";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
+import {AnyKey} from "./AnyKey";
 
 export class Columns {
-
+    // TODO make this an ANYKEY
     public keys: Key[];
 
     constructor(columnKeys: any[]) {
         this.keys = [];
-        // TODO might have to check for a final ","
 
         if (columnKeys.length === 0) {
             throw (new InsightError("No Column keys"));

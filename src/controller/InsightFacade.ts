@@ -114,6 +114,8 @@ export default class InsightFacade implements IInsightFacade {
         Promise.all(promises).then((allFiles) => {
             allFiles.forEach((file) => {
                 // Parse the file into a JSON object
+                // TODO if this throws an error handle it properly.
+                //  Pretty sure this is why we were missing points for add dataset.
                 let json: any = JSON.parse(file);
                 // Get the array of files from the file
                 let fileSections: any = json["result"];

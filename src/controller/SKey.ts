@@ -21,6 +21,7 @@ export class SKey {
         this.idString = new IdString(strs[0]);
 
 
+        // TODO add new keys for Rooms
         // Set the sField
         switch (strs[1]) {
             case "dept":

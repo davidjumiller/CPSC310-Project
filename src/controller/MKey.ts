@@ -18,6 +18,7 @@ export class MKey {
             throw (new InsightError("Invalid MKey"));
             // Log.trace("invalid MKey");
         }
+        // TODO add new keys for Rooms
         // Set the mField
         switch (strs[1]) {
             case "avg":
