@@ -13,3 +13,6 @@ export class AnyKey {
     // TODO implement constructor
     public key: Key | ApplyKey;
 }
+// TODO make this an abstract class with methods:
+//  getFullKeyString, getKeyId, getKeyField
+//  Key and ApplyKey will be sub types of this class

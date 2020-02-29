@@ -12,7 +12,6 @@ export class Query {
     public transformation: Transformation;
 
     private getDatasetId(filter: Filter): string {
-        // TODO this has to check the Columns if there is no filter because an empty filter is valid
         // I am not 100% sure this works but it works for my one test case at least
         if (filter) {
             if (filter.negation) {
@@ -25,7 +24,7 @@ export class Query {
                 return this.getDatasetId(filter.logicComparison.filters[0]);
             }
         } else {
-            // TODO this won't work once ANYKEY is implemented into columns will have to find a solution
+            // TODO after changing AnyKey to an abstract type with method getKeyId use that method here.
             return this.options.columns.keys[0].key.idString.idString;
         }
     }

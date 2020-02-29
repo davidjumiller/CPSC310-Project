@@ -32,9 +32,6 @@ export class Options {
                 throw (new InsightError("The second key in Options is not ORDER"));
             }
         }
-        // else {
-        //     this.key = new Key("courses_dept");
-        // }
     }
 
     public columns: Columns;

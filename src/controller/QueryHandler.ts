@@ -79,7 +79,6 @@ export class QueryHandler {
             }
         }
         if (!activeDataset) {
-            // TODO figure out which exception to throw here based off of Spec
             throw (new InsightError("queried dataset is not loaded"));
         }
         // Log.trace(activeDataset.sections);
@@ -99,11 +98,6 @@ export class QueryHandler {
     }
 
 
-    // TODO delete this method because its not needed. Columns already has all the info we need
-    // public static executeOptions(options:  Options): string[] {
-    //     return [];
-    // }
-
     public static filterWithOptions(selectedSections: Section[], options: Options): any[] {
         let retval: any[] = [];
         // Log.trace(options);
@@ -119,6 +113,7 @@ export class QueryHandler {
             retval.push(curObj);
         }
 
+        // TODO this is being replaced with the new sort function
         if (options.key) {
             let sortBy: string = options.key.key.idString.idString + "_" + options.key.key.field;
             let sortDept: string = options.key.key.idString.idString + "_dept";
