@@ -13,6 +13,7 @@ import {MKey} from "./MKey";
 import {InsightError, ResultTooLargeError} from "./IInsightFacade";
 import {IdString} from "./IdString";
 import Log from "../Util";
+import {AnyKey} from "./AnyKey";
 
 export class QueryHandler {
 
@@ -33,7 +34,7 @@ export class QueryHandler {
         if (parsedQuery.options.key) {
             key =  parsedQuery.options.key.key;
         }
-        let columnKeys: Key[] = parsedQuery.options.columns.keys;
+        let columnKeys: AnyKey[] = parsedQuery.options.columns.keys;
         // Not sure if there is an Order key yet so set to true by default
         let validKey = true;
 
@@ -43,7 +44,7 @@ export class QueryHandler {
             validKey = false;
             // Checks for if 'Order': key is in columns
             for (let i in columnKeys) {
-                if (columnKeys[i].key.field === key.field) {
+                if (columnKeys[i].getKeyField() === key.field) {
                     validKey = true;
                     break;
                 }
@@ -60,13 +61,34 @@ export class QueryHandler {
         this.findBodyKeyIds(keyIds, parsedQuery.body.filter);
         this.findOptionsKeyIds(keyIds, parsedQuery.options);
 
-        // Every Id in keyIds should be the exact same
+        let referenceIdString: string;
+
         for (let i in keyIds) {
-            if (keyIds[0].idString !== keyIds[i].idString) {
-                throw (new InsightError("Query references multiple datasets"));
-                // return false;
+            if (keyIds[i]) {
+                referenceIdString = keyIds[i].idString;
+                break;
             }
         }
+
+        // Every Id in keyIds should be the exact same
+        for (let i in keyIds) {
+            // KeyIds can have NULL elements because of AnyKeys
+            if (keyIds[i]) {
+                if (referenceIdString !== keyIds[i].idString) {
+                    throw (new InsightError("Query references multiple datasets"));
+                    // return false;
+                }
+            }
+        }
+
+        // Old logic
+        // // Every Id in keyIds should be the exact same
+        // for (let i in keyIds) {
+        //     if (keyIds[0].idString !== keyIds[i].idString) {
+        //         throw (new InsightError("Query references multiple datasets"));
+        //         // return false;
+        //     }
+        // }
         return true;
     }
 
@@ -108,15 +130,15 @@ export class QueryHandler {
             let curObj: any = {};
             for (let i of options.columns.keys) {
                 // This adds a key:value pair to the curObj
-                curObj[i.key.idString.idString + "_" + i.key.field] = section[i.key.field];
+                curObj[i.getFullKeyString()] = section[i.getKeyField()];
             }
             retval.push(curObj);
         }
 
         // TODO this is being replaced with the new sort function
         if (options.key) {
-            let sortBy: string = options.key.key.idString.idString + "_" + options.key.key.field;
-            let sortDept: string = options.key.key.idString.idString + "_dept";
+            let sortBy: string = options.key.getFullKeyString();
+            let sortDept: string = options.key.getKeyId() + "_dept";
             retval.sort(function (a: any, b: any) {
                 if (a[sortBy] < b[sortBy]) {
                     return -1;
@@ -161,7 +183,7 @@ export class QueryHandler {
 
     private static findOptionsKeyIds(ids: &IdString[], options: Options) {
         for (let i in options.columns.keys) {
-            ids.push(options.columns.keys[i].key.idString);
+            ids.push(options.columns.keys[i].getKeyIdClass());
         }
         // Make sure that there is an ORDER key
         if (options.key) {

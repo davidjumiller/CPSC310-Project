@@ -24,8 +24,7 @@ export class Query {
                 return this.getDatasetId(filter.logicComparison.filters[0]);
             }
         } else {
-            // TODO after changing AnyKey to an abstract type with method getKeyId use that method here.
-            return this.options.columns.keys[0].key.idString.idString;
+            return this.options.columns.keys[0].getKeyId();
         }
     }
 

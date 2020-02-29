@@ -1,6 +1,7 @@
 import {IdString} from "./IdString";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
+import {Key} from "./Key";
 
 // enum MField {
 //     avg = 0,

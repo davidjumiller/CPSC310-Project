@@ -1,7 +1,10 @@
 import {InsightError} from "./IInsightFacade";
+import {AnyKey} from "./AnyKey";
+import {IdString} from "./IdString";
 
-export class ApplyKey {
+export class ApplyKey extends AnyKey {
     constructor(keyString: string) {
+        super();
         if (keyString.includes("_")) {
             throw (new InsightError("Apply keys can't contain '_'"));
         } else {
@@ -9,5 +12,21 @@ export class ApplyKey {
         }
     }
 
-    public key: string; // can't have and underscore
+    private readonly key: string; // can't have and underscore.
+
+    public getFullKeyString(): string {
+        return this.key;
+    }
+
+    public getKeyField(): string {
+        return this.key;
+    }
+
+    public getKeyId(): string {
+        return "";
+    }
+
+    public getKeyIdClass(): IdString {
+        return undefined;
+    }
 }

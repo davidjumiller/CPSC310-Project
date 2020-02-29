@@ -2,9 +2,12 @@ import {MKey} from "./MKey";
 import {SKey} from "./SKey";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
+import {AnyKey} from "./AnyKey";
+import {IdString} from "./IdString";
 
-export class Key {
+export class Key extends AnyKey {
     constructor(key: string) {
+        super();
         let strs: string[] = key.split("_");
         if (strs.length > 2) {
             throw (new InsightError("Invalid key"));
@@ -22,6 +25,20 @@ export class Key {
 
     // Changed this to have one singular key of either type
     public key: MKey | SKey;
-}
 
-// TODO after making this a child type of Apply key see if it is worth subtyping Mkey and Skey or will it be too much
+    public getFullKeyString(): string {
+        return this.key.idString.idString + "_" + this.key.field; // Still smells but ill fix later
+    }
+
+    public getKeyField(): string {
+        return this.key.field; // Still smells but ill fix later
+    }
+
+    public getKeyId(): string {
+        return this.key.idString.idString; // Still smells but ill fix later
+    }
+
+    public getKeyIdClass(): IdString {
+        return this.key.idString;
+    }
+}

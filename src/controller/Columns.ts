@@ -4,8 +4,7 @@ import {InsightError} from "./IInsightFacade";
 import {AnyKey} from "./AnyKey";
 
 export class Columns {
-    // TODO make this an ANYKEY
-    public keys: Key[];
+    public keys: AnyKey[];
 
     constructor(columnKeys: any[]) {
         this.keys = [];
