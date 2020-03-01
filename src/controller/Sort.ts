@@ -1,8 +1,6 @@
 import {AnyKey} from "./AnyKey";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
-import {Key} from "./Key";
-import {ApplyKey} from "./ApplyKey";
 import {KeyFactory} from "./KeyFactory";
 import {IdString} from "./IdString";
 
@@ -26,20 +24,11 @@ export class Sort {
             } else {
                 for (let str of keys) {
                     this.sortKeys.push(KeyFactory.generateKey(str));
-                    // if (str.includes("_")) {
-                    //     this.sortKeys.push(new Key(str));
-                    // } else {
-                    //     this.sortKeys.push(new ApplyKey(str));
-                    // }
+
                 }
             }
         } else {
             this.sortKeys.push(KeyFactory.generateKey(queryElement));
-            // if (queryElement.includes("_")) {
-            //     this.sortKeys.push(new Key(queryElement));
-            // } else {
-            //     this.sortKeys.push(new ApplyKey(queryElement));
-            // }
         }
         Log.trace(this.sortKeys);
     }

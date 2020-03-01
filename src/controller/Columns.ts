@@ -1,8 +1,5 @@
-import {Key} from "./Key";
-import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
 import {AnyKey} from "./AnyKey";
-import {ApplyKey} from "./ApplyKey";
 import {KeyFactory} from "./KeyFactory";
 
 export class Columns {
@@ -13,17 +10,11 @@ export class Columns {
 
         if (columnKeys.length === 0) {
             throw (new InsightError("No Column keys"));
-            // Log.trace("error no column keys");
         }
 
         for (let i of columnKeys) {
-            // Log.trace(i);
             this.keys.push(KeyFactory.generateKey(i));
-            // if (i.toString().includes("_")) {
-            //     this.keys.push(new Key(i));
-            // } else {
-            //     this.keys.push(new ApplyKey(i));
-            // }
+
         }
     }
 

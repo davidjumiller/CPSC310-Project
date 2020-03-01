@@ -1,6 +1,5 @@
 import {MKey} from "./MKey";
 import {SKey} from "./SKey";
-import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
 import {AnyKey} from "./AnyKey";
 import {IdString} from "./IdString";
@@ -11,7 +10,6 @@ export class Key extends AnyKey {
         let strs: string[] = key.split("_");
         if (strs.length > 2) {
             throw (new InsightError("Invalid key"));
-            // Log.trace("invalid key");
         }
         // TODO add room keys here
         if (strs[1] === "avg" || strs[1] === "pass" ||

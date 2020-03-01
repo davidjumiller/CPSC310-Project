@@ -1,4 +1,3 @@
-import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
 
 export class InputString {
