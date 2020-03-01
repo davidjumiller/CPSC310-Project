@@ -24,7 +24,8 @@ export class Query {
                 return this.getDatasetId(filter.logicComparison.filters[0]);
             }
         } else {
-            return this.options.columns.keys[0].getKeyId();
+            return this.options.getColumnKeysDatasetId();
+            // return this.options.columns.keys[0].getKeyId();
         }
     }
 

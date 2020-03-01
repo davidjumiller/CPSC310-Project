@@ -6,7 +6,7 @@ import {IdString} from "./IdString";
 
 export class Sort {
     constructor(queryElement: any) {
-        Log.trace(queryElement);
+        // Log.trace(queryElement);
         this.sortKeys = [];
         let queryElementKeys: string[] = Object.keys(queryElement);
         if (queryElementKeys[0] === "dir") {
@@ -30,7 +30,7 @@ export class Sort {
         } else {
             this.sortKeys.push(KeyFactory.generateKey(queryElement));
         }
-        Log.trace(this.sortKeys);
+        // Log.trace(this.sortKeys);
     }
 
     public sort(elements: any[]) {

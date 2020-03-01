@@ -552,6 +552,11 @@ describe("InsightFacade Add/Remove Dataset", function () {
                                     foo: {
                                         AVG: "courses_avg"
                                     }
+                                },
+                                {
+                                    fluff: {
+                                        MAX: "courses_avg"
+                                    }
                                 }
                             ]
                         }

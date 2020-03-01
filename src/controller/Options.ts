@@ -18,7 +18,6 @@ export class Options {
 
         // Make sure that there is an ORDER because its optional
         if (keys.length === 2) {
-            // TODO Order is deprecated and replaced with sort
             if (keys[1] === "ORDER") {
                 this.sortOrder = new Sort(queryElement[keys[1]]);
             } else {
@@ -46,6 +45,14 @@ export class Options {
                 if (!valid) {
                     throw (new InsightError("At least one sortkey is not in Columns"));
                 }
+            }
+        }
+    }
+
+    public getColumnKeysDatasetId(): string {
+        for (let i of this.columns.keys) {
+            if (i.getKeyId()) {
+                return i.getKeyId();
             }
         }
     }

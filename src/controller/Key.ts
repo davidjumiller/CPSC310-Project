@@ -11,9 +11,11 @@ export class Key extends AnyKey {
         if (strs.length > 2) {
             throw (new InsightError("Invalid key"));
         }
-        // TODO add room keys here
-        if (strs[1] === "avg" || strs[1] === "pass" ||
-            strs[1] === "fail" || strs[1] === "audit" || strs[1] === "year") {
+        // TODO figure out how to handle the fact that "allowedKeys" should be split based on Database Type
+        let allowedMkeys: string[] = ["avg", "pass", "fail", "audit", "year", "lat", "lon", "seats"];
+        // if (strs[1] === "avg" || strs[1] === "pass" ||
+        //     strs[1] === "fail" || strs[1] === "audit" || strs[1] === "year")
+        if (allowedMkeys.includes( strs[1])) {
             this.key = new MKey(key);
         } else {
             this.key = new SKey(key);
