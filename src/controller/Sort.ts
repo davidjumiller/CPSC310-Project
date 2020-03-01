@@ -34,27 +34,53 @@ export class Sort {
     }
 
     public sort(elements: any[]) {
-        // TODO the sort implementation for if there is a direction
-        let sortBy: string = this.sortKeys[0].getFullKeyString();
-        let sortDept: string = this.sortKeys[0].getKeyId() + "_dept";
+        let sortKeys: any[] = this.sortKeys;
+        // let sortBy: string = this.sortKeys[0].getFullKeyString();
+        // let sortDept: string = this.sortKeys[0].getKeyId() + "_dept";
+        let sortDirection: string = this.direction;
         elements.sort(function (a: any, b: any) {
-            if (a[sortBy] < b[sortBy]) {
-                return -1;
-            }
-            if (a[sortBy] > b[sortBy]) {
-                return 1;
-            }
-            if (a[sortBy] === b[sortBy]) {
-                if (a[sortDept] < b[sortDept]) {
-                    return 1;
+            if (!sortDirection || sortDirection === "UP") {
+                for (let i of sortKeys) {
+                    let sortBy: string = i.getFullKeyString();
+                    if (a[sortBy] < b[sortBy]) {
+                        return -1;
+                    }
+                    if (a[sortBy] > b[sortBy]) {
+                        return 1;
+                    }
                 }
-                if (a[sortDept] > b[sortDept]) {
-                    return -1;
+                return 0;
+            } else {
+                for (let i of sortKeys) {
+                    let sortBy: string = i.getFullKeyString();
+                    if (a[sortBy] < b[sortBy]) {
+                        return 1;
+                    }
+                    if (a[sortBy] > b[sortBy]) {
+                        return -1;
+                    }
                 }
+                return 0;
             }
-            return 0;
+            // OLD logic for sort
+            // if (a[sortBy] < b[sortBy]) {
+            //     return -1;
+            // }
+            // if (a[sortBy] > b[sortBy]) {
+            //     return 1;
+            // }
+            // if (a[sortBy] === b[sortBy]) {
+            //     if (a[sortDept] < b[sortDept]) {
+            //         return 1;
+            //     }
+            //     if (a[sortDept] > b[sortDept]) {
+            //         return -1;
+            //     }
+            // }
+            // return 0;
         });
     }
+
 
     public direction: string; // either UP or DOWN or NULL
     public sortKeys: AnyKey[]; // can be one or more but if there is no direction it can only be one.

@@ -239,6 +239,7 @@ export default class InsightFacade implements IInsightFacade {
             let selectedSections: Section[] = QueryHandler.executeBody(parsedQuery, this.datasets);
             // let selectedFields: string[] = QueryHandler.executeOptions(query.options);
             let retval: any[] = QueryHandler.filterWithOptions(selectedSections, parsedQuery.options);
+            // Log.trace(retval);
             return Promise.resolve(retval);
         } catch (e) {
             // TODO why is this creating an unhandled promise rejection in the test
