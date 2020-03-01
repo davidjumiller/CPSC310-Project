@@ -24,9 +24,10 @@ export class Options {
         if (keys.length === 2) {
             // TODO Order is deprecated and replaced with sort
             if (keys[1] === "ORDER") {
+                this.sortOrder = new Sort(queryElement[keys[1]]);
                 // Log.trace(keys[1]);
-                let order: string = queryElement[keys[1]];
-                this.key = new Key(order);
+                // let order: string = queryElement[keys[1]];
+                // this.key = new Key(order);
                 // Log.trace(order);
             } else {
                 throw (new InsightError("The second key in Options is not ORDER"));
@@ -34,7 +35,30 @@ export class Options {
         }
     }
 
+    public doSort(elements: any[]) {
+        if (this.sortOrder) {
+            this.sortOrder.sort(elements);
+        }
+    }
+
+    public checkAllSortKeysAreInColumns() {
+        if (this.sortOrder) {
+            for (let i of this.sortOrder.sortKeys) {
+                let valid: boolean = false;
+                for (let j of this.columns.keys) {
+                    if (j.getKeyField() === i.getKeyField()) {
+                        valid = true;
+                        break;
+                    }
+                }
+                if (!valid) {
+                    throw (new InsightError("At least one sortkey is not in Columns"));
+                }
+            }
+        }
+    }
+
     public columns: Columns;
-    public key: Key; // TODO this is deprecated and replaced with sort
-    public sort: Sort; // can be NULL
+    // public key: Key; // TODO this is deprecated and replaced with sort
+    public sortOrder: Sort; // can be NULL
 }

@@ -2,6 +2,8 @@ import {Key} from "./Key";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
 import {AnyKey} from "./AnyKey";
+import {ApplyKey} from "./ApplyKey";
+import {KeyFactory} from "./KeyFactory";
 
 export class Columns {
     public keys: AnyKey[];
@@ -16,7 +18,12 @@ export class Columns {
 
         for (let i of columnKeys) {
             // Log.trace(i);
-            this.keys.push(new Key(i));
+            this.keys.push(KeyFactory.generateKey(i));
+            // if (i.toString().includes("_")) {
+            //     this.keys.push(new Key(i));
+            // } else {
+            //     this.keys.push(new ApplyKey(i));
+            // }
         }
     }
 

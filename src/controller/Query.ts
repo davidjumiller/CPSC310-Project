@@ -50,6 +50,10 @@ export class Query {
                     // Log.trace("error in query const");
                     throw (new InsightError("invalid second key in query"));
                 }
+            } else if (inum === 2) {
+                if (i === "TRANSFORMATIONS") {
+                    this.transformation = new Transformation(query[i]);
+                }
             } else {
                 Log.trace("error in query const");
                 throw (new InsightError("Too many keys in Query"));

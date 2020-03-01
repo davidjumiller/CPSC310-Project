@@ -27,33 +27,32 @@ export class QueryHandler {
     public static validQuery(parsedQuery: Query): boolean {
         // Should work for now, .key.key probably need to be changed
 
-        // TODO this should thrown an InsightError when its not valid to describe why it failed and then this
-        //  will no longer need to return a bool at all
-        let key: SKey | MKey ;
-        // Make sure that there in an Order before setting key (rename)
-        if (parsedQuery.options.key) {
-            key =  parsedQuery.options.key.key;
-        }
-        let columnKeys: AnyKey[] = parsedQuery.options.columns.keys;
-        // Not sure if there is an Order key yet so set to true by default
-        let validKey = true;
-
-        // Make sure that there is an order key
-        if (key) {
-            // If there is an order key then set valid key to false by default
-            validKey = false;
-            // Checks for if 'Order': key is in columns
-            for (let i in columnKeys) {
-                if (columnKeys[i].getKeyField() === key.field) {
-                    validKey = true;
-                    break;
-                }
-            }
-        }
-        if (!validKey) {
-            throw (new InsightError("Order key is not in Columns"));
-            // return false;
-        }
+        parsedQuery.options.checkAllSortKeysAreInColumns();
+        // let key: SKey | MKey ;
+        // // Make sure that there in an Order before setting key (rename)
+        // if (parsedQuery.options.key) {
+        //     key =  parsedQuery.options.key.key;
+        // }
+        // let columnKeys: AnyKey[] = parsedQuery.options.columns.keys;
+        // // Not sure if there is an Order key yet so set to true by default
+        // let validKey = true;
+        //
+        // // Make sure that there is an order key
+        // if (key) {
+        //     // If there is an order key then set valid key to false by default
+        //     validKey = false;
+        //     // Checks for if 'Order': key is in columns
+        //     for (let i in columnKeys) {
+        //         if (columnKeys[i].getKeyField() === key.field) {
+        //             validKey = true;
+        //             break;
+        //         }
+        //     }
+        // }
+        // if (!validKey) {
+        //     throw (new InsightError("Order key is not in Columns"));
+        //     // return false;
+        // }
 
         // Checks if Query is referencing more than one dataset
         // This part looks recursively looks for Key IdStrings and pushes them to keyIds
@@ -135,28 +134,28 @@ export class QueryHandler {
             retval.push(curObj);
         }
 
-        // TODO this is being replaced with the new sort function
-        if (options.key) {
-            let sortBy: string = options.key.getFullKeyString();
-            let sortDept: string = options.key.getKeyId() + "_dept";
-            retval.sort(function (a: any, b: any) {
-                if (a[sortBy] < b[sortBy]) {
-                    return -1;
-                }
-                if (a[sortBy] > b[sortBy]) {
-                    return 1;
-                }
-                if (a[sortBy] === b[sortBy]) {
-                    if (a[sortDept] < b[sortDept]) {
-                        return 1;
-                    }
-                    if (a[sortDept] > b[sortDept]) {
-                        return -1;
-                    }
-                }
-                return 0;
-            });
-        }
+        options.doSort(retval);
+        // if (options.sort) {
+            // let sortBy: string = options.key.getFullKeyString();
+            // let sortDept: string = options.key.getKeyId() + "_dept";
+            // retval.sort(function (a: any, b: any) {
+            //     if (a[sortBy] < b[sortBy]) {
+            //         return -1;
+            //     }
+            //     if (a[sortBy] > b[sortBy]) {
+            //         return 1;
+            //     }
+            //     if (a[sortBy] === b[sortBy]) {
+            //         if (a[sortDept] < b[sortDept]) {
+            //             return 1;
+            //         }
+            //         if (a[sortDept] > b[sortDept]) {
+            //             return -1;
+            //         }
+            //     }
+            //     return 0;
+            // });
+        // }
         return retval;
     }
 
@@ -185,10 +184,14 @@ export class QueryHandler {
         for (let i in options.columns.keys) {
             ids.push(options.columns.keys[i].getKeyIdClass());
         }
-        // Make sure that there is an ORDER key
-        if (options.key) {
-            ids.push(options.key.key.idString);
+
+        if (options.sortOrder) {
+            options.sortOrder.pushAllIdClasses(ids);
         }
+        // Make sure that there is an ORDER key
+        // if (options.key) {
+        //     ids.push(options.key.key.idString);
+        // }
     }
 
     private static matchesQueryLogicComp(logicComparison: LogicComparison, section: Section): boolean {

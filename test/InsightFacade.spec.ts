@@ -127,51 +127,51 @@ describe("InsightFacade Add/Remove Dataset", function () {
                 });
         });
 
-        it("Mock test to help develop perform query", function () {
-            // This should fail eventually because the dataset in the query is not avgtst
-            const id: string = "courses";
-            const expected: string[] = [id];
-            return insightFacade
-                .addDataset(id, datasets[id], InsightDatasetKind.Courses)
-                .then((result: string[]) => {
-                    return insightFacade.performQuery({
-                        WHERE: {
-                            AND: [
-                                {
-                                    EQ: {
-                                        courses_avg: 50
-                                    }
-                                },
-                                {
-                                    IS: {
-                                        courses_dept: "busi"
-                                    }
-                                }
-                            ]
-                        },
-                        OPTIONS: {
-                            COLUMNS: [
-                                "courses_dept",
-                                "courses_id",
-                                "courses_instructor",
-                                "courses_title",
-                                "courses_uuid",
-                                "courses_avg",
-                                "courses_pass",
-                                "courses_fail",
-                                "courses_audit",
-                                "courses_year"
-                            ]
-                        }
-                    });
-                })
-                .then((res: string[]) => {
-                    expect(true).to.deep.equal(true);
-                })
-                .catch((error: any) => {
-                    expect.fail(error, expected, "Should not have rejected " + error);
-                });
-        });
+        // it("Mock test to help develop perform query", function () {
+        //     // This should fail eventually because the dataset in the query is not avgtst
+        //     const id: string = "courses";
+        //     const expected: string[] = [id];
+        //     return insightFacade
+        //         .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+        //         .then((result: string[]) => {
+        //             return insightFacade.performQuery({
+        //                 WHERE: {
+        //                     AND: [
+        //                         {
+        //                             EQ: {
+        //                                 courses_avg: 50
+        //                             }
+        //                         },
+        //                         {
+        //                             IS: {
+        //                                 courses_dept: "busi"
+        //                             }
+        //                         }
+        //                     ]
+        //                 },
+        //                 OPTIONS: {
+        //                     COLUMNS: [
+        //                         "courses_dept",
+        //                         "courses_id",
+        //                         "courses_instructor",
+        //                         "courses_title",
+        //                         "courses_uuid",
+        //                         "courses_avg",
+        //                         "courses_pass",
+        //                         "courses_fail",
+        //                         "courses_audit",
+        //                         "courses_year"
+        //                     ]
+        //                 }
+        //             });
+        //         })
+        //         .then((res: string[]) => {
+        //             expect(true).to.deep.equal(true);
+        //         })
+        //         .catch((error: any) => {
+        //             expect.fail(error, expected, "Should not have rejected " + error);
+        //         });
+        // });
 
         it("Should fail to add an invalid dataset", function () {
             const id: string = "invalidDataSet";
@@ -513,6 +513,55 @@ describe("InsightFacade Add/Remove Dataset", function () {
                 })
                 .catch((err: any) => {
                     expect.fail(err, expected, "Should not have rejected" + err);
+                });
+        });
+    });
+
+    describe("Mock tests for query", function () {
+        it("Mock test to help develop perform query", function () {
+            // This should fail eventually because the dataset in the query is not avgtst
+            const id: string = "courses";
+            const expected: string[] = [id];
+            return insightFacade
+                .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+                .then((result: string[]) => {
+                    return insightFacade.performQuery({
+                        WHERE: {
+                            IS: {
+                                courses_dept: "cpsc"
+                            }
+                        },
+                        OPTIONS: {
+                            COLUMNS: [
+                                "courses_title",
+                                "courses_instructor",
+                                "foo"
+                            ],
+                            ORDER: {
+                                dir: "UP",
+                                keys: ["foo"]
+                            }
+                        },
+                        TRANSFORMATIONS: {
+                            GROUP: [
+                                "courses_title",
+                                "courses_instructor"
+                            ],
+                            APPLY: [
+                                {
+                                    foo: {
+                                        AVG: "courses_avg"
+                                    }
+                                }
+                            ]
+                        }
+                    });
+                })
+                .then((res: string[]) => {
+                    expect(true).to.deep.equal(true);
+                })
+                .catch((error: any) => {
+                    expect.fail(error, expected, "Should not have rejected " + error);
                 });
         });
     });
