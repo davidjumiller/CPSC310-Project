@@ -24,4 +24,10 @@ export class Transformation {
 
     public group: Group;
     public apply: Apply;
+
+    public applyTransformation(selectedSections: any[]): any[] {
+        let groups: Map<string, any[]> = this.group.createGroups(selectedSections);
+        let retVal: any[] = this.apply.doApplyRules(groups, this.group);
+        return retVal;
+    }
 }

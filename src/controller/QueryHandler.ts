@@ -25,6 +25,9 @@ export class QueryHandler {
     }
 
     public static validQuery(parsedQuery: Query): boolean {
+
+        // TODO make sure no two applyRules have the same ApplyKey name
+
         parsedQuery.options.checkAllSortKeysAreInColumns();
 
         // Checks if Query is referencing more than one dataset
