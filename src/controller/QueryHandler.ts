@@ -13,6 +13,7 @@ import {MKey} from "./MKey";
 import {InsightError, ResultTooLargeError} from "./IInsightFacade";
 import {IdString} from "./IdString";
 import Log from "../Util";
+import {AnyKey} from "./AnyKey";
 
 export class QueryHandler {
 
@@ -24,35 +25,10 @@ export class QueryHandler {
     }
 
     public static validQuery(parsedQuery: Query): boolean {
-        // Should work for now, .key.key probably need to be changed
 
-        // TODO this should thrown an InsightError when its not valid to describe why it failed and then this
-        //  will no longer need to return a bool at all
-        let key: SKey | MKey ;
-        // Make sure that there in an Order before setting key (rename)
-        if (parsedQuery.options.key) {
-            key =  parsedQuery.options.key.key;
-        }
-        let columnKeys: Key[] = parsedQuery.options.columns.keys;
-        // Not sure if there is an Order key yet so set to true by default
-        let validKey = true;
+        // TODO make sure no two applyRules have the same ApplyKey name
 
-        // Make sure that there is an order key
-        if (key) {
-            // If there is an order key then set valid key to false by default
-            validKey = false;
-            // Checks for if 'Order': key is in columns
-            for (let i in columnKeys) {
-                if (columnKeys[i].key.field === key.field) {
-                    validKey = true;
-                    break;
-                }
-            }
-        }
-        if (!validKey) {
-            throw (new InsightError("Order key is not in Columns"));
-            // return false;
-        }
+        parsedQuery.options.checkAllSortKeysAreInColumns();
 
         // Checks if Query is referencing more than one dataset
         // This part looks recursively looks for Key IdStrings and pushes them to keyIds
@@ -60,13 +36,34 @@ export class QueryHandler {
         this.findBodyKeyIds(keyIds, parsedQuery.body.filter);
         this.findOptionsKeyIds(keyIds, parsedQuery.options);
 
-        // Every Id in keyIds should be the exact same
+        let referenceIdString: string;
+
         for (let i in keyIds) {
-            if (keyIds[0].idString !== keyIds[i].idString) {
-                throw (new InsightError("Query references multiple datasets"));
-                // return false;
+            if (keyIds[i]) {
+                referenceIdString = keyIds[i].idString;
+                break;
             }
         }
+
+        // Every Id in keyIds should be the exact same
+        for (let i in keyIds) {
+            // KeyIds can have NULL elements because of AnyKeys
+            if (keyIds[i]) {
+                if (referenceIdString !== keyIds[i].idString) {
+                    throw (new InsightError("Query references multiple datasets"));
+                    // return false;
+                }
+            }
+        }
+
+        // Old logic
+        // // Every Id in keyIds should be the exact same
+        // for (let i in keyIds) {
+        //     if (keyIds[0].idString !== keyIds[i].idString) {
+        //         throw (new InsightError("Query references multiple datasets"));
+        //         // return false;
+        //     }
+        // }
         return true;
     }
 
@@ -79,7 +76,6 @@ export class QueryHandler {
             }
         }
         if (!activeDataset) {
-            // TODO figure out which exception to throw here based off of Spec
             throw (new InsightError("queried dataset is not loaded"));
         }
         // Log.trace(activeDataset.sections);
@@ -99,11 +95,6 @@ export class QueryHandler {
     }
 
 
-    // TODO delete this method because its not needed. Columns already has all the info we need
-    // public static executeOptions(options:  Options): string[] {
-    //     return [];
-    // }
-
     public static filterWithOptions(selectedSections: Section[], options: Options): any[] {
         let retval: any[] = [];
         // Log.trace(options);
@@ -114,32 +105,12 @@ export class QueryHandler {
             let curObj: any = {};
             for (let i of options.columns.keys) {
                 // This adds a key:value pair to the curObj
-                curObj[i.key.idString.idString + "_" + i.key.field] = section[i.key.field];
+                curObj[i.getFullKeyString()] = section[i.getKeyField()];
             }
             retval.push(curObj);
         }
 
-        if (options.key) {
-            let sortBy: string = options.key.key.idString.idString + "_" + options.key.key.field;
-            let sortDept: string = options.key.key.idString.idString + "_dept";
-            retval.sort(function (a: any, b: any) {
-                if (a[sortBy] < b[sortBy]) {
-                    return -1;
-                }
-                if (a[sortBy] > b[sortBy]) {
-                    return 1;
-                }
-                if (a[sortBy] === b[sortBy]) {
-                    if (a[sortDept] < b[sortDept]) {
-                        return 1;
-                    }
-                    if (a[sortDept] > b[sortDept]) {
-                        return -1;
-                    }
-                }
-                return 0;
-            });
-        }
+        options.doSort(retval);
         return retval;
     }
 
@@ -166,11 +137,11 @@ export class QueryHandler {
 
     private static findOptionsKeyIds(ids: &IdString[], options: Options) {
         for (let i in options.columns.keys) {
-            ids.push(options.columns.keys[i].key.idString);
+            ids.push(options.columns.keys[i].getKeyIdClass());
         }
-        // Make sure that there is an ORDER key
-        if (options.key) {
-            ids.push(options.key.key.idString);
+
+        if (options.sortOrder) {
+            options.sortOrder.pushAllIdClasses(ids);
         }
     }
 
@@ -179,8 +150,6 @@ export class QueryHandler {
         //  If its or pass as soon as one is true and fail if none are true
         let sectionResult: boolean;
         for ( let i of logicComparison.filters) {
-            // Log.trace("in Logic loop");
-            // Log.trace(i);
             sectionResult = QueryHandler.matchesFilter(i, section);
             if (logicComparison.logic === Logic.AND) {
                 if (!sectionResult) {

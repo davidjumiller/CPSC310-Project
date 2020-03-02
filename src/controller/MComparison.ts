@@ -10,12 +10,9 @@ export enum MComparator {
 
 export class MComparison {
     constructor(queryElement: any) {
-        // Log.trace("mComp" );
-        // Log.trace(queryElement);
         let keys: string[] = Object.keys(queryElement);
         if (keys.length > 1) {
             throw (new InsightError("too many keys in MComparison"));
-            // Log.trace("error in MComparison");
         }
         if (keys.length === 0) {
             throw  (new InsightError("Mcomparison is empty"));
@@ -33,17 +30,14 @@ export class MComparison {
                 this.mComparator = MComparator.EQ;
                 break;
             default:
-                // Log.trace("invalid Mcomparator");
                 throw (new InsightError("Invalid MComparator"));
         }
 
         let mkeyNumPair: any = queryElement[keys[0]];
-        // Log.trace(mkeyNumPair);
 
         let mKeys: string[] = Object.keys(mkeyNumPair);
         if (mKeys.length > 1) {
             throw (new InsightError("Too many MKey's in MComparison"));
-            // Log.trace("error in MComparison");
         }
         // Make sure that the MComarison isn't empty
         if (mKeys.length === 0) {

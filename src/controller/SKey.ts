@@ -12,10 +12,8 @@ enum SField {
 
 export class SKey {
     constructor(sKey: string) {
-        // Log.trace("in Skey");
         let strs: string[] = sKey.split("_");
         if (strs.length > 2) {
-            // Log.trace("invalid SKey");
             throw (new InsightError("Invalid SKey"));
         }
         this.idString = new IdString(strs[0]);
@@ -40,7 +38,6 @@ export class SKey {
                 this.field = "uuid";
                 break;
             default:
-                // Log.trace("invalid SKey");
                 throw( new InsightError("Invalid Skey"));
                 break;
         }
