@@ -28,6 +28,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
         courses2: "./test/data/dataWithCoursesFolderRenamed.zip",
         invalidDataSet: "./test/data/invalidData.zip",
         oneBadFile: "./test/data/oneBadFile.zip",
+        rooms: "./test/data/rooms.zip",
     };
     let datasets: { [id: string]: string } = {};
     let insightFacade: InsightFacade;
@@ -504,10 +505,75 @@ describe("InsightFacade Add/Remove Dataset", function () {
     });
     describe("Rooms", function () {
         it("Should add a valid dataset", function () {
-            const id: string = "courses";
+            const id: string = "rooms";
             const expected: string[] = [id];
             return insightFacade
-                .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+                .addDataset(id, datasets[id], InsightDatasetKind.Rooms)
+                .then((result: string[]) => {
+                    expect(result).to.deep.equal(expected);
+                })
+                .catch((err: any) => {
+                    expect.fail(err, expected, "Should not have rejected" + err);
+                });
+        });
+        // TODO
+        it("Should not add a dataset with no rooms folder", function () {
+            const id: string = "rooms";
+            const expected: string[] = [id];
+            return insightFacade
+                .addDataset(id, datasets[id], InsightDatasetKind.Rooms)
+                .then((result: string[]) => {
+                    expect(result).to.deep.equal(expected);
+                })
+                .catch((err: any) => {
+                    expect.fail(err, expected, "Should not have rejected" + err);
+                });
+        });
+        // TODO
+        it("Should not add a dataset with no valid rooms", function () {
+            const id: string = "rooms";
+            const expected: string[] = [id];
+            return insightFacade
+                .addDataset(id, datasets[id], InsightDatasetKind.Rooms)
+                .then((result: string[]) => {
+                    expect(result).to.deep.equal(expected);
+                })
+                .catch((err: any) => {
+                    expect.fail(err, expected, "Should not have rejected" + err);
+                });
+        });
+        // TODO
+        it("Should not add a dataset with more than one index.htm", function () {
+            const id: string = "rooms";
+            const expected: string[] = [id];
+            return insightFacade
+                .addDataset(id, datasets[id], InsightDatasetKind.Rooms)
+                .then((result: string[]) => {
+                    expect(result).to.deep.equal(expected);
+                })
+                .catch((err: any) => {
+                    expect.fail(err, expected, "Should not have rejected" + err);
+                });
+        });
+        // TODO
+        it("Should not add a dataset with no index.htm", function () {
+            const id: string = "rooms";
+            const expected: string[] = [id];
+            return insightFacade
+                .addDataset(id, datasets[id], InsightDatasetKind.Rooms)
+                .then((result: string[]) => {
+                    expect(result).to.deep.equal(expected);
+                })
+                .catch((err: any) => {
+                    expect.fail(err, expected, "Should not have rejected" + err);
+                });
+        });
+        // TODO
+        it("Should not add a dataset with no valid rooms", function () {
+            const id: string = "rooms";
+            const expected: string[] = [id];
+            return insightFacade
+                .addDataset(id, datasets[id], InsightDatasetKind.Rooms)
                 .then((result: string[]) => {
                     expect(result).to.deep.equal(expected);
                 })
