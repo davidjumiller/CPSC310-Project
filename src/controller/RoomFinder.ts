@@ -50,13 +50,13 @@ export class RoomFinder {
                     buildings.push(building);
                 }
             });
-            let p1 = new Promise<any>((resolve, reject) => {
-                Promise.all(promises).then(() => {
-                    return resolve(RoomFinder.findRooms(id, ids, reference, buildings, zip));
-                });
-            });
-            return p1;
         }
+        let p1 = new Promise<string[]>((resolve, reject) => {
+            Promise.all(promises).then(() => {
+                return resolve(RoomFinder.findRooms(id, ids, reference, buildings, zip));
+            });
+        });
+        return p1;
     }
 
     // Navigates to the room file and finds the number, furniture, type
@@ -161,7 +161,9 @@ export class RoomFinder {
                         if (responsJson.lat) {
                             building.lat = responsJson.lat;
                             building.lon = responsJson.lon;
+                            return resolve();
                         } else {
+                            // TODO Check this
                             throw (new InsightError(responsJson.error));
                         }
                     });
