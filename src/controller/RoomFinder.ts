@@ -15,8 +15,10 @@ import {AgentOptions} from "https";
 
 export class RoomFinder {
 
-    public static findBuildings(document: any, id: string, ids: string[], reference: InsightFacade): Building[] {
+    public static findBuildings(document: any, id: string,
+                                ids: string[], reference: InsightFacade, zip: JSZip): Promise<string[]> {
         let buildings: Building[] = [];
+        let promises: Array<Promise<any>> = [];
         let table: any = RoomFinder.findTable(document);
         if (table == null) {
             Log.trace("Can't find table: " + table);
@@ -44,12 +46,17 @@ export class RoomFinder {
                     building.shortname = td2.childNodes[0].value.trim();
                     building.fullname = td3.childNodes[1].childNodes[0].value.trim();
                     building.address = td4.childNodes[0].value.trim();
-                    RoomFinder.findLatLon(building);
+                    promises.push(RoomFinder.findLatLon(building));
 
                     buildings.push(building);
                 }
             });
-            return buildings;
+            let p1 = new Promise<any>((resolve, reject) => {
+                Promise.all(promises).then(() => {
+                    return resolve(RoomFinder.findRooms(id, ids, reference, buildings, zip));
+                });
+            });
+            return p1;
         }
     }
 
@@ -140,16 +147,17 @@ export class RoomFinder {
     }
 
     // TODO
-    private static findLatLon(building: Building) {
+    private static findLatLon(building: Building): Promise<any> {
         let url: string = "http://cs310.students.cs.ubc.ca:11316/api/v1/project_team131/";
         let URLEncodedAddress: string = building.address.replace(/\s/g, "%20");
         url = url.concat(URLEncodedAddress);
-        // try {
-        //     http.get(url, (res) => {
-        //         Log.trace(res);
-        //     });
-        // } catch (e) {
-        //     Log.trace("fluff");
-        // }
+        try {
+            http.get(url, (res) => {
+                Log.trace(res);
+            });
+        } catch (e) {
+            Log.trace("fluff");
+        }
+        return;
     }
 }

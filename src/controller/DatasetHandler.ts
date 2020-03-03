@@ -35,8 +35,7 @@ export class DatasetHandler {
                         index.async("text")
                             .then((indexContent: string) => {
                                 let indexDocument: parse5.Document = parse5.parse(indexContent);
-                                let buildings: Building[] = RoomFinder.findBuildings(indexDocument, id, ids, reference);
-                                return resolve(RoomFinder.findRooms(id, ids, reference, buildings, zip));
+                                return resolve(RoomFinder.findBuildings(indexDocument, id, ids, reference, zip));
                             })
                             .catch((err: any) => {
                                 reject(new InsightError("Error finding rooms: " + err));
