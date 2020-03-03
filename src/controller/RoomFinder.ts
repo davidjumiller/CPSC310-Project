@@ -42,6 +42,7 @@ export class RoomFinder {
                     building.shortname = td2.childNodes[0].value.trim();
                     building.fullname = td3.childNodes[1].childNodes[0].value.trim();
                     building.address = td4.childNodes[0].value.trim();
+                    RoomFinder.findLatLon(building);
 
                     buildings.push(building);
                 }
@@ -120,12 +121,13 @@ export class RoomFinder {
                 room.shortname = building.shortname;
                 room.fullname = building.fullname;
                 room.address = building.address;
+                room.lat = building.lat;
+                room.lon = building.lon;
                 room.number = tr.childNodes[1].childNodes[1].childNodes[0].value;
                 room.seats = tr.childNodes[3].childNodes[0].value.trim();
                 room.furniture = tr.childNodes[5].childNodes[0].value.trim();
                 room.type = tr.childNodes[7].childNodes[0].value.trim();
                 room.href = tr.childNodes[9].childNodes[1].attrs[0].value;
-                RoomFinder.findLatLon(room);
                 room.name = room.shortname + " " + room.number;
                 roomsInBuilding.push(room);
                 // TODO Should make check if all parts of the Rooms class are filled
@@ -135,7 +137,8 @@ export class RoomFinder {
         return roomsInBuilding;
     }
 
-    private static findLatLon(room: Room) {
+    // TODO
+    private static findLatLon(building: Building) {
         return;
     }
 }
