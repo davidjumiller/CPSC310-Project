@@ -47,7 +47,6 @@ export class RoomFinder {
                     building.fullname = td3.childNodes[1].childNodes[0].value.trim();
                     building.address = td4.childNodes[0].value.trim();
                     promises.push(RoomFinder.findLatLon(building));
-
                     buildings.push(building);
                 }
             });
@@ -146,18 +145,31 @@ export class RoomFinder {
         return roomsInBuilding;
     }
 
-    // TODO
     private static findLatLon(building: Building): Promise<any> {
         let url: string = "http://cs310.students.cs.ubc.ca:11316/api/v1/project_team131/";
         let URLEncodedAddress: string = building.address.replace(/\s/g, "%20");
         url = url.concat(URLEncodedAddress);
-        try {
-            http.get(url, (res) => {
-                Log.trace(res);
-            });
-        } catch (e) {
-            Log.trace("fluff");
-        }
-        return;
+        let p1: Promise<any> = new Promise<any>((resolve, reject) => {
+            try {
+                http.get(url, (res) => {
+                    let data: string = "";
+                    res.on("data", (chunk) => {
+                        data += chunk;
+                    });
+                    res.on("end", () => {
+                        let responsJson: any = JSON.parse(data);
+                        if (responsJson.lat) {
+                            building.lat = responsJson.lat;
+                            building.lon = responsJson.lon;
+                        } else {
+                            throw (new InsightError(responsJson.error));
+                        }
+                    });
+                });
+            } catch (e) {
+                throw (new InsightError("Invalid URL"));
+            }
+        });
+        return p1;
     }
 }
