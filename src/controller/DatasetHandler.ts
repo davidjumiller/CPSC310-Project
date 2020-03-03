@@ -72,14 +72,14 @@ export class DatasetHandler {
                         room.href = a.attrs[0].value;
                     }
                     // TODO This is a little hacky, change this to find the specific attr.value
-                    room.shortname = td2.childNodes[0].value;
+                    room.shortname = td2.childNodes[0].value.trim();
                     room.fullname = td3.childNodes[1].childNodes[0].value.trim();
                     room.address = td4.childNodes[0].value.trim();
-
                     this.findRoomDetails(room);
-
+                    this.findLatLon(room);
                     room.name = room.shortname + " " + room.number;
 
+                    rooms.push(room);
                     // TODO Should make check if all parts of the Rooms class are filled
                     if (true) {
                         rows++;
@@ -117,6 +117,10 @@ export class DatasetHandler {
 
     // Navigates to the room file and finds the number, furniture, type
     private static findRoomDetails(room: Room) {
+        return;
+    }
+
+    private static findLatLon(room: Room) {
         return;
     }
 
