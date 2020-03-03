@@ -10,6 +10,8 @@ import { Room } from "./Room";
 import * as parse5 from "parse5";
 import { Building } from "./Building";
 import { DatasetHandler } from "./DatasetHandler";
+import * as http from "http";
+import {AgentOptions} from "https";
 
 export class RoomFinder {
 
@@ -139,6 +141,15 @@ export class RoomFinder {
 
     // TODO
     private static findLatLon(building: Building) {
-        return;
+        let url: string = "http://cs310.students.cs.ubc.ca:11316/api/v1/project_team131/";
+        let URLEncodedAddress: string = building.address.replace(/\s/g, "%20");
+        url = url.concat(URLEncodedAddress);
+        // try {
+        //     http.get(url, (res) => {
+        //         Log.trace(res);
+        //     });
+        // } catch (e) {
+        //     Log.trace("fluff");
+        // }
     }
 }
