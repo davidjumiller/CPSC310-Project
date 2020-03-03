@@ -8,6 +8,8 @@ import {Query} from "./Query";
 import InsightFacade from "./InsightFacade";
 import { Room } from "./Room";
 import * as parse5 from "parse5";
+import { Building } from "./Building";
+import { RoomFinder } from "./RoomFinder";
 
 export class DatasetHandler {
 
@@ -25,103 +27,24 @@ export class DatasetHandler {
 
         let p1 = new Promise<string[]>((resolve, reject) => {
             zip.loadAsync(content, { base64: true})
-                .then(() => {
+                .then((files: JSZip) => {
                     let index: JSZip.JSZipObject = zip.file("rooms/index.htm");
                     if (index === null) {
                         return reject(new InsightError("No rooms folder or index.htm"));
                     } else {
                         index.async("text")
                             .then((indexContent: string) => {
-                                let document: parse5.Document = parse5.parse(indexContent);
-                                return resolve(this.findRooms(document, id, ids, reference));
+                                let indexDocument: parse5.Document = parse5.parse(indexContent);
+                                let buildings: Building[] = RoomFinder.findBuildings(indexDocument, id, ids, reference);
+                                return resolve(RoomFinder.findRooms(id, ids, reference, buildings, zip));
                             })
                             .catch((err: any) => {
-                                reject(new InsightError("Error finding rooms"));
+                                reject(new InsightError("Error finding rooms: " + err));
                             });
                     }
                 });
         });
         return p1;
-    }
-
-    private static findRooms(document: any, id: string, ids: string[], reference: InsightFacade): Promise<string[]> {
-        let rooms: Room[] = [];
-        let rows: number = 0;
-        let table: any = this.findTable(document);
-        if (table == null) {
-            Log.trace("Can't find table: " + table);
-            throw new InsightError("Can't find table");
-        }
-        Log.trace("Table found: " + table.nodeName);
-        // tBody is always the 4th (3) obj in the childNodes array
-        let tBody: any = table.childNodes[3];
-        if (tBody.nodeName === "tbody") {
-            tBody.childNodes.forEach((tr: any) => {
-                if (tr.childNodes !== undefined) {
-                    // TODO Handle duplicate buildings
-                    let room: Room = new Room();
-                    let td1: any = tr.childNodes[1];
-                    let td2: any = tr.childNodes[3];
-                    let td3: any = tr.childNodes[5];
-                    let td4: any = tr.childNodes[7];
-                    // This searchs the td to find the first instance of "a"
-                    let a: any = td1.childNodes.find((td1Child: any) => {
-                        return td1Child.nodeName === "a";
-                    });
-                    if (a != null && a !== undefined) {
-                        room.href = a.attrs[0].value;
-                    }
-                    // TODO This is a little hacky, change this to find the specific attr.value
-                    room.shortname = td2.childNodes[0].value.trim();
-                    room.fullname = td3.childNodes[1].childNodes[0].value.trim();
-                    room.address = td4.childNodes[0].value.trim();
-                    this.findRoomDetails(room);
-                    this.findLatLon(room);
-                    room.name = room.shortname + " " + room.number;
-
-                    rooms.push(room);
-                    // TODO Should make check if all parts of the Rooms class are filled
-                    if (true) {
-                        rows++;
-                    }
-                }
-            });
-            if (rows === 0) {
-                return Promise.reject(new InsightError("no valid rooms"));
-            }
-            const isd: InsightDataset = {id: id, kind: InsightDatasetKind.Rooms, numRows: rows};
-            const newDataset: Dataset = new Dataset(isd, rooms);
-            reference.datasets.push(newDataset);
-            DatasetHandler.writeDatasetToDisk(newDataset);
-            ids.push(newDataset.isd.id);
-
-            return Promise.resolve(ids);
-        }
-    }
-
-    private static findTable(document: any): any {
-        let children: any = document.childNodes;
-        if (document.nodeName === "table") {
-            return document;
-        } else if (children != null && children !== undefined) {
-            let potentialTable: any;
-            children.find((child: any) => {
-                potentialTable = this.findTable(child);
-                if (potentialTable !== undefined) {
-                    return true;
-                }
-            });
-            return potentialTable;
-        }
-    }
-
-    // Navigates to the room file and finds the number, furniture, type
-    private static findRoomDetails(room: Room) {
-        return;
-    }
-
-    private static findLatLon(room: Room) {
-        return;
     }
 
     public static addCourse(id: string, content: string, reference: InsightFacade) {
