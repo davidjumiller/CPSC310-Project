@@ -19,28 +19,34 @@ export class SKey {
         this.idString = new IdString(strs[0]);
 
 
-        // TODO add new keys for Rooms
+        let validFields: string[] = ["dept", "id", "instructor", "title", "uuid", "fullname", "shortname",
+            "number", "name", "address", "type", "furniture", "href"];
         // Set the sField
-        switch (strs[1]) {
-            case "dept":
-                this.field = "dept";
-                break;
-            case "id":
-                this.field = "id";
-                break;
-            case "instructor":
-                this.field = "instructor";
-                break;
-            case "title":
-                this.field = "title";
-                break;
-            case "uuid":
-                this.field = "uuid";
-                break;
-            default:
-                throw( new InsightError("Invalid Skey"));
-                break;
+        if (validFields.includes(strs[1])) {
+            this.field = strs[1];
+        } else {
+            throw( new InsightError("Invalid Skey"));
         }
+        // switch (strs[1]) {
+        //     case "dept":
+        //         this.field = "dept";
+        //         break;
+        //     case "id":
+        //         this.field = "id";
+        //         break;
+        //     case "instructor":
+        //         this.field = "instructor";
+        //         break;
+        //     case "title":
+        //         this.field = "title";
+        //         break;
+        //     case "uuid":
+        //         this.field = "uuid";
+        //         break;
+        //     default:
+        //         throw( new InsightError("Invalid Skey"));
+        //         break;
+        // }
     }
 
     public idString: IdString;

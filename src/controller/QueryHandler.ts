@@ -81,6 +81,7 @@ export class QueryHandler {
             throw (new InsightError("queried dataset is not loaded"));
         }
         // Log.trace(activeDataset.sections);
+        // TODO pass in the dataset type and make sure the filter doesn't access bad keys
         for (let section of activeDataset.sections) {
             if (QueryHandler.matchesFilter(query.body.filter, section)) {
                 // Log.trace("yay matches");
