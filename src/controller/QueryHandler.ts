@@ -7,13 +7,8 @@ import {MComparator, MComparison} from "./MComparison";
 import {SComparison} from "./SComparison";
 import {Negation} from "./Negation";
 import {Filter} from "./Filter";
-import {Key} from "./Key";
-import {SKey} from "./SKey";
-import {MKey} from "./MKey";
-import {InsightError, ResultTooLargeError} from "./IInsightFacade";
+import {InsightDatasetKind, InsightError, ResultTooLargeError} from "./IInsightFacade";
 import {IdString} from "./IdString";
-import Log from "../Util";
-import {AnyKey} from "./AnyKey";
 
 export class QueryHandler {
 
@@ -82,7 +77,7 @@ export class QueryHandler {
         }
         // Log.trace(activeDataset.sections);
         for (let section of activeDataset.sections) {
-            if (QueryHandler.matchesFilter(query.body.filter, section)) {
+            if (QueryHandler.matchesFilter(query.body.filter, section, activeDataset.isd.kind)) {
                 // Log.trace("yay matches");
                 retval.push(section);
                 // Make sure that there aren't too many matching sections
@@ -147,12 +142,13 @@ export class QueryHandler {
         }
     }
 
-    private static matchesQueryLogicComp(logicComparison: LogicComparison, section: Section): boolean {
+    private static matchesQueryLogicComp(logicComparison: LogicComparison, section: Section, kind: InsightDatasetKind):
+        boolean {
         //  If its for an AND fail once one is false and pass if none are false
         //  If its or pass as soon as one is true and fail if none are true
         let sectionResult: boolean;
         for ( let i of logicComparison.filters) {
-            sectionResult = QueryHandler.matchesFilter(i, section);
+            sectionResult = QueryHandler.matchesFilter(i, section, kind);
             if (logicComparison.logic === Logic.AND) {
                 if (!sectionResult) {
                     // If the logic is an AND then fail if any section is false
@@ -174,7 +170,16 @@ export class QueryHandler {
     }
 
 
-    private static matchesQueryMComparison(mComparison: MComparison, section: Section): boolean {
+    private static matchesQueryMComparison(mComparison: MComparison, section: Section, kind: InsightDatasetKind):
+        boolean {
+        let validRoomFields: string[] = ["lat", "lon", "seats"];
+        let validCourseFields: string[] = ["avg", "pass", "fail", "audit", "year"];
+        if (kind === InsightDatasetKind.Rooms && validCourseFields.includes(mComparison.mKey.field)) {
+            throw (new InsightError("Invalid Room Mkey"));
+        }
+        if (kind === InsightDatasetKind.Courses && validRoomFields.includes(mComparison.mKey.field)) {
+            throw (new InsightError("Invalid Courses Mkey"));
+        }
         switch (mComparison.mComparator) {
             case MComparator.EQ:
                 return section[mComparison.mKey.field] === mComparison.num;
@@ -187,7 +192,17 @@ export class QueryHandler {
         }
     }
 
-    private static matchesQuerySComparison(sComparison: SComparison, section: Section): boolean {
+    private static matchesQuerySComparison(sComparison: SComparison, section: Section, kind: InsightDatasetKind):
+        boolean {
+        let validRoomFields: string[] = ["fullname", "shortname", "number", "name",
+            "address", "type", "furniture", "href"];
+        let validCourseFields: string[] = ["dept", "id", "instructor", "title", "uuid"];
+        if (kind === InsightDatasetKind.Rooms && validCourseFields.includes(sComparison.sKey.field)) {
+            throw (new InsightError("Invalid Room Skey"));
+        }
+        if (kind === InsightDatasetKind.Courses && validRoomFields.includes(sComparison.sKey.field)) {
+            throw (new InsightError("Invalid Courses Skey"));
+        }
         if (sComparison.firstWild && !sComparison.secondWild) {
             return section[sComparison.sKey.field].endsWith(sComparison.inputString.inputString);
         }
@@ -201,23 +216,23 @@ export class QueryHandler {
         return section[sComparison.sKey.field] === sComparison.inputString.inputString;
     }
 
-    private static matchesQueryNegation(negation: Negation, section: Section): boolean {
-        return !QueryHandler.matchesFilter(negation.filter, section);
+    private static matchesQueryNegation(negation: Negation, section: Section, kind: InsightDatasetKind): boolean {
+        return !QueryHandler.matchesFilter(negation.filter, section, kind);
     }
 
-    private static matchesFilter(filter: Filter, section: Section): boolean {
+    private static matchesFilter(filter: Filter, section: Section, kind: InsightDatasetKind): boolean {
         if (!filter) {
             return true;
         }
         // Log.trace(filter);
         if (filter.logicComparison) {
-            return QueryHandler.matchesQueryLogicComp(filter.logicComparison, section);
+            return QueryHandler.matchesQueryLogicComp(filter.logicComparison, section, kind);
         } else if (filter.mComparison) {
-            return QueryHandler.matchesQueryMComparison(filter.mComparison, section);
+            return QueryHandler.matchesQueryMComparison(filter.mComparison, section, kind);
         } else if (filter.sComparison) {
-            return QueryHandler.matchesQuerySComparison(filter.sComparison, section);
+            return QueryHandler.matchesQuerySComparison(filter.sComparison, section, kind);
         } else if (filter.negation) {
-            return QueryHandler.matchesQueryNegation(filter.negation, section);
+            return QueryHandler.matchesQueryNegation(filter.negation, section, kind);
         }
         // Validation up to this point will have already thrown an error if this is the case
         return false;

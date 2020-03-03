@@ -586,21 +586,20 @@ describe("InsightFacade Add/Remove Dataset", function () {
     describe("Mock tests for query", function () {
         it("Mock test to help develop perform query", function () {
             // This should fail eventually because the dataset in the query is not avgtst
-            const id: string = "courses";
+            const id: string = "rooms";
             const expected: string[] = [id];
             return insightFacade
-                .addDataset(id, datasets[id], InsightDatasetKind.Courses)
+                .addDataset(id, datasets[id], InsightDatasetKind.Rooms)
                 .then((result: string[]) => {
                     return insightFacade.performQuery({
                         WHERE: {
                             IS: {
-                                courses_dept: "cpsc"
+                                rooms_furniture: "Classroom-Movable Tables & Chairs"
                             }
                         },
                         OPTIONS: {
                             COLUMNS: [
-                                "courses_title",
-                                "courses_instructor",
+                                "rooms_fullname",
                                 "foo"
                             ],
                             ORDER: {
@@ -610,22 +609,51 @@ describe("InsightFacade Add/Remove Dataset", function () {
                         },
                         TRANSFORMATIONS: {
                             GROUP: [
-                                "courses_title",
-                                "courses_instructor"
+                                "rooms_fullname"
                             ],
                             APPLY: [
                                 {
                                     foo: {
-                                        AVG: "courses_avg"
-                                    }
-                                },
-                                {
-                                    fluff: {
-                                        MAX: "courses_avg"
+                                        AVG: "rooms_seats"
                                     }
                                 }
                             ]
                         }
+
+                        // WHERE: {
+                        //     IS: {
+                        //         courses_dept: "cpsc"
+                        //     }
+                        // },
+                        // OPTIONS: {
+                        //     COLUMNS: [
+                        //         "courses_title",
+                        //         "courses_instructor",
+                        //         "foo"
+                        //     ],
+                        //     ORDER: {
+                        //         dir: "UP",
+                        //         keys: ["foo"]
+                        //     }
+                        // },
+                        // TRANSFORMATIONS: {
+                        //     GROUP: [
+                        //         "courses_title",
+                        //         "courses_instructor"
+                        //     ],
+                        //     APPLY: [
+                        //         {
+                        //             foo: {
+                        //                 AVG: "courses_avg"
+                        //             }
+                        //         },
+                        //         {
+                        //             fluff: {
+                        //                 MAX: "courses_avg"
+                        //             }
+                        //         }
+                        //     ]
+                        // }
                     });
                 })
                 .then((res: string[]) => {

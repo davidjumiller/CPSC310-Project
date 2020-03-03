@@ -8,27 +8,33 @@ export class MKey {
             throw (new InsightError("Invalid MKey"));
         }
         // TODO add new keys for Rooms
-        // Set the mField
-        switch (strs[1]) {
-            case "avg":
-                this.field = "avg";
-                break;
-            case "pass":
-                this.field = "pass";
-                break;
-            case "fail":
-                this.field = "fail";
-                break;
-            case "audit":
-                this.field = "audit";
-                break;
-            case "year":
-                this.field = "year";
-                break;
-            default:
-                throw (new InsightError("Invalid MKey"));
-                break;
+        let validFields: string[] = ["avg", "pass", "fail", "audit", "year", "lat", "lon", "seats"];
+        if (validFields.includes(strs[1])) {
+            this.field = strs[1];
+        } else {
+            throw (new InsightError("Invalid MKey"));
         }
+        // Set the mField
+        // switch (strs[1]) {
+        //     case "avg":
+        //         this.field = "avg";
+        //         break;
+        //     case "pass":
+        //         this.field = "pass";
+        //         break;
+        //     case "fail":
+        //         this.field = "fail";
+        //         break;
+        //     case "audit":
+        //         this.field = "audit";
+        //         break;
+        //     case "year":
+        //         this.field = "year";
+        //         break;
+        //     default:
+        //         throw (new InsightError("Invalid MKey"));
+        //         break;
+        // }
 
         // Set the IDString
         this.idString = new IdString(strs[0]);
