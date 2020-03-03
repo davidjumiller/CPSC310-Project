@@ -2,6 +2,7 @@ import {Group} from "./Group";
 import {Apply} from "./Apply";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
+import {AnyKey} from "./AnyKey";
 
 export class Transformation {
     constructor(queryElement: any) {
@@ -29,5 +30,22 @@ export class Transformation {
         let groups: Map<string, any[]> = this.group.createGroups(selectedSections);
         let retVal: any[] = this.apply.doApplyRules(groups, this.group);
         return retVal;
+    }
+
+    public isValid(keys: AnyKey[]) {
+        this.apply.isValid();
+        let validKeys: string[] = [];
+        for (let i of this.group.groupKeys) {
+            validKeys.push(i.getKeyField());
+        }
+        for (let i of this.apply.applyRules) {
+            validKeys.push(i.applyKey.getKeyField());
+        }
+        for (let key of keys) {
+            if (!validKeys.includes(key.getKeyField())) {
+                throw ( new InsightError("column keys must be either a group key or an apply key"));
+            }
+        }
+
     }
 }

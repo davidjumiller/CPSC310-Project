@@ -19,7 +19,6 @@ export class ApplyRule {
 
         let applyTokenTemp: string = applyTokenKeys[0];
         let allowedTokens: string[] = ["MAX", "MIN", "AVG", "COUNT", "SUM"];
-        // TODO if it isn't COUNT make sure the key is an mKey. refer to spec
         if (allowedTokens.includes(applyTokenTemp)) {
             this.applyToken = applyTokenTemp;
         } else {
