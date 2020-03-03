@@ -26,9 +26,11 @@ export class QueryHandler {
 
     public static validQuery(parsedQuery: Query): boolean {
 
-        // TODO make sure no two applyRules have the same ApplyKey name
 
         parsedQuery.options.checkAllSortKeysAreInColumns();
+        if (parsedQuery.transformation) {
+            parsedQuery.transformation.isValid(parsedQuery.options.columns.keys);
+        }
 
         // Checks if Query is referencing more than one dataset
         // This part looks recursively looks for Key IdStrings and pushes them to keyIds
