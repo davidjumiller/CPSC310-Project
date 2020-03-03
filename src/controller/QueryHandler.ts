@@ -44,6 +44,9 @@ export class QueryHandler {
 
         // Every Id in keyIds should be the exact same
         for (let i in keyIds) {
+            if (!keyIds[i] && !parsedQuery.transformation) {
+                throw (new InsightError("Invalid keys"));
+            }
             // KeyIds can have NULL elements because of AnyKeys
             if (keyIds[i]) {
                 if (referenceIdString !== keyIds[i].idString) {
