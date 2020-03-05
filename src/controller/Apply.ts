@@ -6,6 +6,7 @@ import {Group} from "./Group";
 import {AnyKey} from "./AnyKey";
 import {SKey} from "./SKey";
 import {MKey} from "./MKey";
+import {IdString} from "./IdString";
 
 export class Apply {
     constructor(queryElement: any) {
@@ -31,6 +32,9 @@ export class Apply {
 
             for (let applyRule of this.applyRules) {
                 curObj[applyRule.applyKey.getKeyField()] = applyRule.apply(value);
+                if (!curObj[applyRule.applyKey.getKeyField()]) {
+                    throw (new InsightError("bad apply rule. Used a key from the wrong dataset"));
+                }
             }
             retVal.push(curObj);
         });
@@ -49,6 +53,12 @@ export class Apply {
             if (!(i.applyToken === "COUNT") && i.applyTokenKey.key instanceof SKey) {
                 throw (new InsightError("SUM, MIN, MAX, AVG must be done on number only keys"));
             }
+        }
+    }
+
+    public addKeyIds(keyIds: IdString[]) {
+        for (let i of this.applyRules) {
+            keyIds.push(i.applyTokenKey.getKeyIdClass());
         }
     }
 }

@@ -3,6 +3,7 @@ import {Apply} from "./Apply";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
 import {AnyKey} from "./AnyKey";
+import {IdString} from "./IdString";
 
 export class Transformation {
     constructor(queryElement: any) {
@@ -47,5 +48,10 @@ export class Transformation {
             }
         }
 
+    }
+
+    public addKeyIds(keyIds: IdString[]) {
+        this.group.addKeyIds(keyIds);
+        this.apply.addKeyIds(keyIds);
     }
 }

@@ -599,24 +599,22 @@ describe("InsightFacade Add/Remove Dataset", function () {
                             },
                             OPTIONS: {
                                 COLUMNS: [
-                                    "rooms_name",
-                                    "rooms_lat",
-                                    "rooms_lon",
+                                    "rooms_name"
                                 ]
                             }
-                        // ,
-                        // TRANSFORMATIONS: {
-                        //     GROUP: [
-                        //         "rooms_fullname"
-                        //     ],
-                        //     APPLY: [
-                        //         {
-                        //             foo: {
-                        //                 AVG: "rooms_seats"
-                        //             }
-                        //         }
-                        //     ]
-                        // }
+                        ,
+                        TRANSFORMATIONS: {
+                            GROUP: [
+                                "rooms_name"
+                            ],
+                            APPLY: [
+                                {
+                                    foo: {
+                                        AVG: "rooms_seats"
+                                    }
+                                }
+                            ]
+                        }
 
                         // WHERE: {
                         //     IS: {

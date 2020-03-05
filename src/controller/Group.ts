@@ -2,6 +2,7 @@ import {Key} from "./Key";
 import Log from "../Util";
 import {InsightError} from "./IInsightFacade";
 import {strict} from "assert";
+import {IdString} from "./IdString";
 
 export class Group {
     constructor(queryElement: any) {
@@ -51,6 +52,12 @@ export class Group {
     public setGroupFieldsOnObj(curObj: any, obj: any) {
         for (let i of this.groupKeys) {
             curObj[i.getKeyField()] = obj[i.getKeyField()];
+        }
+    }
+
+    public addKeyIds(keyIds: IdString[]) {
+        for (let i of this.groupKeys) {
+            keyIds.push(i.getKeyIdClass());
         }
     }
 }

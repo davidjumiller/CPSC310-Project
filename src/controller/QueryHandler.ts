@@ -21,15 +21,17 @@ export class QueryHandler {
 
     public static validQuery(parsedQuery: Query): boolean {
 
-
+        let keyIds: IdString[] = [];
         parsedQuery.options.checkAllSortKeysAreInColumns();
+
         if (parsedQuery.transformation) {
             parsedQuery.transformation.isValid(parsedQuery.options.columns.keys);
+            parsedQuery.transformation.addKeyIds(keyIds);
         }
 
         // Checks if Query is referencing more than one dataset
         // This part looks recursively looks for Key IdStrings and pushes them to keyIds
-        let keyIds: IdString[] = [];
+
         this.findBodyKeyIds(keyIds, parsedQuery.body.filter);
         this.findOptionsKeyIds(keyIds, parsedQuery.options);
 

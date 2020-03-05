@@ -50,9 +50,10 @@ export class ApplyRule {
     }
 
     private sum(value: any[]) {
-        let sum: number = 0;
+        let sum: Decimal = new Decimal(0);
         for (let i of value) {
-            sum += i[this.applyTokenKey.getKeyField()];
+            // sum += i[this.applyTokenKey.getKeyField()];
+            sum = sum.add(new Decimal(i[this.applyTokenKey.getKeyField()]));
         }
         return Number(sum.toFixed(2));
     }
@@ -86,7 +87,7 @@ export class ApplyRule {
                 min = i[this.applyTokenKey.getKeyField()];
             }
         }
-        return min;
+        return Number(min);
     }
 
     private max(value: any[]): number {
@@ -96,6 +97,6 @@ export class ApplyRule {
                 max = i[this.applyTokenKey.getKeyField()];
             }
         }
-        return max;
+        return Number(max);
     }
 }
