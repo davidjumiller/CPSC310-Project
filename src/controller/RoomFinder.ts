@@ -137,7 +137,7 @@ export class RoomFinder {
                 room.furniture = tr.childNodes[5].childNodes[0].value.trim();
                 room.type = tr.childNodes[7].childNodes[0].value.trim();
                 room.href = tr.childNodes[9].childNodes[1].attrs[0].value;
-                room.name = room.shortname + " " + room.number;
+                room.name = room.shortname + "_" + room.number;
                 roomsInBuilding.push(room);
                 // TODO Should make check if all parts of the Rooms class are filled
             }

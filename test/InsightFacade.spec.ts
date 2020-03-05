@@ -599,9 +599,9 @@ describe("InsightFacade Add/Remove Dataset", function () {
                             },
                             OPTIONS: {
                                 COLUMNS: [
-                                    "rooms_fullname",
+                                    "rooms_name",
                                     "rooms_lat",
-                                    "rooms_lon"
+                                    "rooms_lon",
                                 ]
                             }
                         // ,
