@@ -35,9 +35,10 @@ export class RoomFinder {
                     let td2: any = tr.childNodes[3];
                     let td3: any = tr.childNodes[5];
                     let td4: any = tr.childNodes[7];
+                    let td5: any = tr.childNodes[9];
                     // This searchs the td to find the first instance of "a"
-                    let a: any = td1.childNodes.find((td1Child: any) => {
-                        return td1Child.nodeName === "a";
+                    let a: any = td5.childNodes.find((td5Child: any) => {
+                        return td5Child.nodeName === "a";
                     });
                     if (a != null && a !== undefined) {
                         building.path = a.attrs[0].value.slice(2);
