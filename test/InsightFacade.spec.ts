@@ -592,33 +592,31 @@ describe("InsightFacade Add/Remove Dataset", function () {
                 .addDataset(id, datasets[id], InsightDatasetKind.Rooms)
                 .then((result: string[]) => {
                     return insightFacade.performQuery({
-                        WHERE: {
-                            IS: {
-                                rooms_furniture: "Classroom-Movable Tables & Chairs"
-                            }
-                        },
-                        OPTIONS: {
-                            COLUMNS: [
-                                "rooms_fullname",
-                                "foo"
-                            ],
-                            ORDER: {
-                                dir: "UP",
-                                keys: ["foo"]
-                            }
-                        },
-                        TRANSFORMATIONS: {
-                            GROUP: [
-                                "rooms_fullname"
-                            ],
-                            APPLY: [
-                                {
-                                    foo: {
-                                        AVG: "rooms_seats"
-                                    }
+                            WHERE: {
+                                IS: {
+                                    rooms_fullname: "Ponderosa Commons: Oak House"
                                 }
-                            ]
-                        }
+                            },
+                            OPTIONS: {
+                                COLUMNS: [
+                                    "rooms_fullname",
+                                    "rooms_lat",
+                                    "rooms_lon"
+                                ]
+                            }
+                        // ,
+                        // TRANSFORMATIONS: {
+                        //     GROUP: [
+                        //         "rooms_fullname"
+                        //     ],
+                        //     APPLY: [
+                        //         {
+                        //             foo: {
+                        //                 AVG: "rooms_seats"
+                        //             }
+                        //         }
+                        //     ]
+                        // }
 
                         // WHERE: {
                         //     IS: {
@@ -683,6 +681,10 @@ describe("InsightFacade PerformQuery", () => {
             path: "./test/data/dataForAvgsTests.zip",
             kind: InsightDatasetKind.Courses,
         },
+        rooms: {
+            path: "./test/data/Rooms.zip",
+            kind: InsightDatasetKind.Rooms,
+        }
     };
     let insightFacade: InsightFacade;
     let testQueries: ITestQuery[] = [];
