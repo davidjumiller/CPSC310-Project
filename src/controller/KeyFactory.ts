@@ -7,7 +7,7 @@ export class KeyFactory {
         if (str.includes("_")) {
             return new Key(str);
         } else {
-            return new ApplyKey(str);
+            return new ApplyKey(str, undefined);
         }
     }
 }
