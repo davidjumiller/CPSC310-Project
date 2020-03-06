@@ -29,14 +29,13 @@ export class RoomFinder {
         if (tbody.nodeName === "tbody") {
             tbody.childNodes.forEach((tr: any) => {
                 if (tr.childNodes !== undefined) {
-                    // TODO Handle duplicate buildings
                     let building: Building = new Building();
                     let td1: any = tr.childNodes[1];
                     let td2: any = tr.childNodes[3];
                     let td3: any = tr.childNodes[5];
                     let td4: any = tr.childNodes[7];
                     let td5: any = tr.childNodes[9];
-                    // This searchs the td to find the first instance of "a"
+                    // This searchs the td to find the more info's "a"
                     let a: any = td5.childNodes.find((td5Child: any) => {
                         return td5Child.nodeName === "a";
                     });
@@ -48,7 +47,11 @@ export class RoomFinder {
                     building.fullname = td3.childNodes[1].childNodes[0].value.trim();
                     building.address = td4.childNodes[0].value.trim();
                     promises.push(RoomFinder.findLatLon(building));
-                    buildings.push(building);
+
+                    // Checks for duplicate buildings
+                    if (buildings.filter((prevBuilding) => prevBuilding.fullname === building.fullname).length < 1) {
+                        buildings.push(building);
+                    }
                 }
             });
         }
@@ -69,7 +72,8 @@ export class RoomFinder {
 
         let p1 = new Promise<string[]>((resolve, reject) => {
             buildings.forEach((building: Building) => {
-                if (zip.file("rooms/" + building.path) != null) {
+                // Checks for valid building path, and valid building values (catches invalid lat lon)
+                if (zip.file("rooms/" + building.path) != null && RoomFinder.isBuildingValid(building)) {
                     promises.push(zip.file("rooms/" + building.path).async("text")
                     .then((buildingFile: string) => {
                         if (buildingFile == null || buildingFile === undefined) {
@@ -133,17 +137,48 @@ export class RoomFinder {
                 room.lat = building.lat;
                 room.lon = building.lon;
                 room.number = tr.childNodes[1].childNodes[1].childNodes[0].value;
+                // TODO If seats is not given, default value is 0
                 room.seats = tr.childNodes[3].childNodes[0].value.trim();
                 room.furniture = tr.childNodes[5].childNodes[0].value.trim();
                 room.type = tr.childNodes[7].childNodes[0].value.trim();
                 room.href = tr.childNodes[9].childNodes[1].attrs[0].value;
                 room.name = room.shortname + "_" + room.number;
-                roomsInBuilding.push(room);
-                // TODO Should make check if all parts of the Rooms class are filled
+                if (RoomFinder.isRoomValid(room)) {
+                    roomsInBuilding.push(room);
+                }
             }
         });
 
         return roomsInBuilding;
+    }
+
+    private static isBuildingValid(curBuilding: Building): boolean {
+        if (curBuilding.fullname === undefined ||
+            curBuilding.shortname === undefined ||
+            curBuilding.address === undefined ||
+            curBuilding.lat === undefined ||
+            curBuilding.lon === undefined ||
+            curBuilding.path === undefined) {
+            return false;
+        }
+        return true;
+    }
+
+    private static isRoomValid(curRoom: Room): boolean {
+        if (curRoom.fullname === undefined ||
+            curRoom.shortname === undefined ||
+            curRoom.number === undefined ||
+            curRoom.name === undefined ||
+            curRoom.address === undefined ||
+            curRoom.lat === undefined ||
+            curRoom.lon === undefined ||
+            curRoom.seats === undefined ||
+            curRoom.type === undefined ||
+            curRoom.furniture === undefined ||
+            curRoom.href === undefined) {
+            return false;
+        }
+        return true;
     }
 
     private static findLatLon(building: Building): Promise<any> {
@@ -164,8 +199,10 @@ export class RoomFinder {
                             building.lon = responsJson.lon;
                             return resolve();
                         } else {
-                            // TODO Check this
-                            throw (new InsightError(responsJson.error));
+                            // The way we have implemented things makes this reject do nothing,
+                            // we ignore the result of promise.all and simply rely on .then()
+                            // invalid lat + lon is instead caught with an isBuildingValid check
+                            return reject();
                         }
                     });
                 });

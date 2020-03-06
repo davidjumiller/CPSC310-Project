@@ -677,7 +677,7 @@ describe("InsightFacade PerformQuery", () => {
             kind: InsightDatasetKind.Courses,
         },
         rooms: {
-            path: "./test/data/Rooms.zip",
+            path: "./test/data/rooms.zip",
             kind: InsightDatasetKind.Rooms,
         }
     };
