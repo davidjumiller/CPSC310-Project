@@ -597,10 +597,14 @@ describe("InsightFacade Add/Remove Dataset", function () {
                             IS: {courses_dept: "cpsc"}
                         },
                         OPTIONS: {
-                        COLUMNS: ["courses_title", "overallAvg"]
+                        COLUMNS: ["courses_title", "overallAvg"],
+                            ORDER: {
+                                dir: "UP",
+                                keys: ["overallAvg", "courses_title"]
+                            }
                     },
                         TRANSFORMATIONS: {
-                            GROUP: ["courses_title", "courses_avg"],
+                            GROUP: ["courses_title"],
                             APPLY: [{
                                 overallAvg: {
                                     AVG: "courses_avg"
