@@ -1,0 +1,26 @@
+{
+    "title": "C2 spec query",
+    "query":
+    {
+        "WHERE": {
+            "IS": {
+                "rooms_fullname": "Ponderosa Commons: Oak House"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_name"
+            ]
+        }
+    ,
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_name"
+            ],
+            "APPLY": []
+        }
+    }
+,
+    "isQueryValid": true,
+    "result":[{"rooms_name":"PCOH_1001"},{"rooms_name":"PCOH_1002"},{"rooms_name":"PCOH_1003"},{"rooms_name":"PCOH_1008"},{"rooms_name":"PCOH_1009"},{"rooms_name":"PCOH_1011"},{"rooms_name":"PCOH_1215"},{"rooms_name":"PCOH_1302"}]
+}

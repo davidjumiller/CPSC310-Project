@@ -1,0 +1,57 @@
+{
+    "title": "Check Apply rules",
+    "query":
+    {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "foo",
+                "fluff",
+                "fum",
+                "bar",
+                "foobar"
+            ],
+            "ORDER": {
+                "dir": "UP",
+                "keys": [
+                    "foobar","fum","fluff","bar"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_seats"
+            ],
+            "APPLY": [
+                {
+                    "foo": {
+                        "AVG": "rooms_lat"
+                    }
+                },
+                {
+                    "fluff": {
+                        "MIN": "rooms_lat"
+                    }
+                },
+                {
+                    "fum": {
+                        "MAX": "rooms_lat"
+                    }
+                },
+                {
+                    "bar": {
+                        "SUM": "rooms_lat"
+                    }
+                },
+                {
+                    "foobar": {
+                        "COUNT": "rooms_lat"
+                    }
+                }
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result":[{"foo":49.26,"fluff":49.26044,"fum":49.26044,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26047,"fum":49.26047,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26114,"fum":49.26114,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26114,"fum":49.26114,"bar":98.52,"foobar":1},{"foo":49.26,"fluff":49.26176,"fum":49.26176,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26176,"fum":49.26176,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26176,"fum":49.26176,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26176,"fum":49.26176,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26207,"fum":49.26207,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26229,"fum":49.26229,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26229,"fum":49.26229,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26229,"fum":49.26229,"bar":344.84,"foobar":1},{"foo":49.26,"fluff":49.26236,"fum":49.26236,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26273,"fum":49.26273,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26273,"fum":49.26273,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26293,"fum":49.26293,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26293,"fum":49.26293,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26293,"fum":49.26293,"bar":98.53,"foobar":1},{"foo":49.26,"fluff":49.26372,"fum":49.26372,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26398,"fum":49.26398,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26398,"fum":49.26398,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26414,"fum":49.26414,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.2642,"fum":49.2642,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.2643,"fum":49.2643,"bar":98.53,"foobar":1},{"foo":49.26,"fluff":49.26478,"fum":49.26478,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26478,"fum":49.26478,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26479,"fum":49.26479,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26479,"fum":49.26479,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26486,"fum":49.26486,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26486,"fum":49.26486,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26486,"fum":49.26486,"bar":49.26,"foobar":1},{"foo":49.26,"fluff":49.26486,"fum":49.26486,"bar":147.79,"foobar":1},{"foo":49.27,"fluff":49.26517,"fum":49.26517,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26517,"fum":49.26517,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26545,"fum":49.26545,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26545,"fum":49.26545,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26545,"fum":49.26545,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.2659,"fum":49.2659,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.2659,"fum":49.2659,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.2659,"fum":49.2659,"bar":98.53,"foobar":1},{"foo":49.27,"fluff":49.26605,"fum":49.26605,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.266089,"fum":49.266089,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.2661,"fum":49.2661,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26627,"fum":49.26627,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26627,"fum":49.26627,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.266463,"fum":49.266463,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26766,"fum":49.26766,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26766,"fum":49.26766,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26767,"fum":49.26767,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26826,"fum":49.26826,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26826,"fum":49.26826,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26826,"fum":49.26826,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26826,"fum":49.26826,"bar":98.54,"foobar":1},{"foo":49.27,"fluff":49.26826,"fum":49.26826,"bar":197.07,"foobar":1},{"foo":49.27,"fluff":49.2683,"fum":49.2683,"bar":147.8,"foobar":1},{"foo":49.27,"fluff":49.26867,"fum":49.26867,"bar":49.27,"foobar":1},{"foo":49.27,"fluff":49.26958,"fum":49.26958,"bar":49.27,"foobar":1},{"foo":49.26,"fluff":49.26114,"fum":49.26228,"bar":98.52,"foobar":2},{"foo":49.26,"fluff":49.26236,"fum":49.26274,"bar":147.79,"foobar":2},{"foo":49.26,"fluff":49.26114,"fum":49.26293,"bar":492.63,"foobar":2},{"foo":49.26,"fluff":49.26273,"fum":49.26398,"bar":98.53,"foobar":2},{"foo":49.26,"fluff":49.26044,"fum":49.26414,"bar":98.52,"foobar":2},{"foo":49.26,"fluff":49.26293,"fum":49.26414,"bar":492.63,"foobar":2},{"foo":49.26,"fluff":49.26414,"fum":49.2642,"bar":98.53,"foobar":2},{"foo":49.26,"fluff":49.26125,"fum":49.26478,"bar":197.06,"foobar":2},{"foo":49.26,"fluff":49.26176,"fum":49.26486,"bar":98.53,"foobar":2},{"foo":49.26,"fluff":49.2643,"fum":49.26486,"bar":197.06,"foobar":2},{"foo":49.26,"fluff":49.26125,"fum":49.26541,"bar":98.53,"foobar":2},{"foo":49.26,"fluff":49.26047,"fum":49.26605,"bar":98.53,"foobar":2},{"foo":49.26,"fluff":49.26044,"fum":49.26627,"bar":98.53,"foobar":2},{"foo":49.26,"fluff":49.26114,"fum":49.26766,"bar":788.22,"foobar":2},{"foo":49.27,"fluff":49.26478,"fum":49.26766,"bar":197.06,"foobar":2},{"foo":49.26,"fluff":49.26044,"fum":49.26826,"bar":98.53,"foobar":2},{"foo":49.27,"fluff":49.26044,"fum":49.26826,"bar":295.59,"foobar":2},{"foo":49.27,"fluff":49.26273,"fum":49.26826,"bar":443.41,"foobar":2},{"foo":49.27,"fluff":49.2643,"fum":49.26826,"bar":98.53,"foobar":2},{"foo":49.27,"fluff":49.26478,"fum":49.26826,"bar":98.53,"foobar":2},{"foo":49.27,"fluff":49.26486,"fum":49.26862,"bar":147.8,"foobar":2},{"foo":49.27,"fluff":49.26486,"fum":49.26958,"bar":98.53,"foobar":2},{"foo":49.27,"fluff":49.2659,"fum":49.26958,"bar":147.8,"foobar":2},{"foo":49.26,"fluff":49.26229,"fum":49.26478,"bar":147.79,"foobar":3},{"foo":49.27,"fluff":49.26414,"fum":49.2661,"bar":394.12,"foobar":3},{"foo":49.26,"fluff":49.26048,"fum":49.266463,"bar":591.14,"foobar":3},{"foo":49.27,"fluff":49.26478,"fum":49.2666,"bar":147.8,"foobar":3},{"foo":49.27,"fluff":49.26114,"fum":49.26826,"bar":492.66,"foobar":3},{"foo":49.27,"fluff":49.26274,"fum":49.26826,"bar":197.07,"foobar":3},{"foo":49.27,"fluff":49.26545,"fum":49.26826,"bar":147.8,"foobar":3},{"foo":49.27,"fluff":49.26273,"fum":49.26958,"bar":147.8,"foobar":3},{"foo":49.27,"fluff":49.26176,"fum":49.2699,"bar":197.06,"foobar":3},{"foo":49.27,"fluff":49.26228,"fum":49.2699,"bar":147.8,"foobar":3},{"foo":49.27,"fluff":49.26273,"fum":49.27106,"bar":147.8,"foobar":3},{"foo":49.26,"fluff":49.26048,"fum":49.26605,"bar":295.57,"foobar":4},{"foo":49.26,"fluff":49.26125,"fum":49.26767,"bar":197.06,"foobar":4},{"foo":49.27,"fluff":49.26048,"fum":49.26867,"bar":295.59,"foobar":4},{"foo":49.26,"fluff":49.26414,"fum":49.26766,"bar":295.59,"foobar":5},{"foo":49.27,"fluff":49.26228,"fum":49.27106,"bar":344.88,"foobar":5},{"foo":49.26,"fluff":49.26048,"fum":49.26766,"bar":738.95,"foobar":7},{"foo":49.26,"fluff":49.26176,"fum":49.26767,"bar":492.65,"foobar":7},{"foo":49.27,"fluff":49.26044,"fum":49.26862,"bar":985.31,"foobar":7},{"foo":49.27,"fluff":49.2642,"fum":49.26867,"bar":936.08,"foobar":7},{"foo":49.26,"fluff":49.26044,"fum":49.2699,"bar":640.44,"foobar":7},{"foo":49.27,"fluff":49.26047,"fum":49.26826,"bar":1527.23,"foobar":8}]
+}

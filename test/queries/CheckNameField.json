@@ -1,0 +1,21 @@
+{
+    "title": "Check that the lon field works",
+    "query":
+    {
+        "WHERE": {
+            "IS": {
+                "rooms_fullname": "Ponderosa Commons: Oak House"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_name",
+                "rooms_lat",
+                "rooms_lon"
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result":[{"rooms_name":"PCOH_1001","rooms_lat":49.264,"rooms_lon":-123.2559},{"rooms_name":"PCOH_1002","rooms_lat":49.264,"rooms_lon":-123.2559},{"rooms_name":"PCOH_1003","rooms_lat":49.264,"rooms_lon":-123.2559},{"rooms_name":"PCOH_1008","rooms_lat":49.264,"rooms_lon":-123.2559},{"rooms_name":"PCOH_1009","rooms_lat":49.264,"rooms_lon":-123.2559},{"rooms_name":"PCOH_1011","rooms_lat":49.264,"rooms_lon":-123.2559},{"rooms_name":"PCOH_1215","rooms_lat":49.264,"rooms_lon":-123.2559},{"rooms_name":"PCOH_1302","rooms_lat":49.264,"rooms_lon":-123.2559}]
+}

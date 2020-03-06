@@ -1,0 +1,55 @@
+{
+    "title": "Check that all the apply rules work in a basic test",
+    "query":
+    {
+        "WHERE": {
+            "IS": {
+                "rooms_fullname": "Ponderosa Commons: Oak House"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "foo",
+                "fluff",
+                "fum",
+                "bar",
+                "foobar"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_fullname"
+            ],
+            "APPLY": [
+                {
+                    "foo": {
+                        "AVG": "rooms_seats"
+                    }
+                },
+                {
+                    "fluff": {
+                        "MIN": "rooms_seats"
+                    }
+                },
+                {
+                    "fum": {
+                        "MAX": "rooms_seats"
+                    }
+                },
+                {
+                    "bar": {
+                        "SUM": "rooms_seats"
+                    }
+                },
+                {
+                    "foobar": {
+                        "COUNT": "rooms_seats"
+                    }
+                }
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+"result":[{"foo":30,"fluff":24,"fum":40,"bar":240,"foobar":2}]
+}
