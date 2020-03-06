@@ -32,7 +32,7 @@ export class Apply {
 
             for (let applyRule of this.applyRules) {
                 curObj[applyRule.applyKey.getKeyField()] = applyRule.apply(value);
-                if (!curObj[applyRule.applyKey.getKeyField()]) {
+                if (curObj[applyRule.applyKey.getKeyField()] === undefined) {
                     throw (new InsightError("bad apply rule. Used a key from the wrong dataset"));
                 }
             }

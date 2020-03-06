@@ -33,7 +33,7 @@ export class ApplyRule {
     public applyTokenKey: Key;
 
     public apply(value: any[]): number {
-        if (!value[0][this.applyTokenKey.getKeyField()]) {
+        if (value[0][this.applyTokenKey.getKeyField()] === undefined ) {
             throw (new InsightError("bad apply rule. Used a key from the wrong dataset"));
         }
         switch (this.applyToken) {

@@ -586,29 +586,26 @@ describe("InsightFacade Add/Remove Dataset", function () {
     describe("Mock tests for query", function () {
         it("Mock test to help develop perform query", function () {
             // This should fail eventually because the dataset in the query is not avgtst
-            const id: string = "rooms";
+            const id: string = "courses";
             const expected: string[] = [id];
             return insightFacade
-                .addDataset(id, datasets[id], InsightDatasetKind.Rooms)
+                .addDataset(id, datasets[id], InsightDatasetKind.Courses)
                 .then((result: string[]) => {
                     return insightFacade.performQuery({
-                            WHERE: {
-                                IS: {
-                                    rooms_fullname: "Ponderosa Commons: Oak House"
-                                }
-                            },
-                            OPTIONS: {
-                                COLUMNS: [
-                                    "rooms_name"
-                                ]
-                            }
-                        ,
+
+                        WHERE: {},
+                        OPTIONS: {
+                        COLUMNS: ["courses_title", "overallAvg"]
+                    },
                         TRANSFORMATIONS: {
-                            GROUP: [
-                                "rooms_name"
-                            ],
-                            APPLY: []
-                        }
+                        GROUP: ["courses_title"],
+                            APPLY: [{
+                            overallAvg: {
+                                AVG: "courses_avg"
+                            }
+                        }]
+                    }
+
 
                         // WHERE: {
                         //     IS: {

@@ -43,7 +43,7 @@ export class Group {
     }
 
     private getUniqueKeyString(field: any): string {
-        if (!field) {
+        if (field === undefined) {
             throw (new InsightError("Used a group key from the wrong type of dataset"));
         }
         let str: string = field.toString();
