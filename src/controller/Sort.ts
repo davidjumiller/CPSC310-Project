@@ -17,7 +17,9 @@ export class Sort {
             } else {
                 throw (new InsightError("invalid Direction: " + dir));
             }
-
+            if (queryElementKeys[1] !== "keys") {
+                throw (new InsightError("Invalid Sort"));
+            }
             let keys: string[] = queryElement[queryElementKeys[1]];
             if (keys.length === 0) {
                 throw (new InsightError("sort has no keys"));
@@ -28,7 +30,11 @@ export class Sort {
                 }
             }
         } else {
-            this.sortKeys.push(KeyFactory.generateKey(queryElement));
+            if (typeof queryElement === "string") {
+                this.sortKeys.push(KeyFactory.generateKey(queryElement));
+            } else {
+                throw (new InsightError("Invalid Sort"));
+            }
         }
         // Log.trace(this.sortKeys);
     }
