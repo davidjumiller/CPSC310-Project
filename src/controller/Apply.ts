@@ -11,16 +11,16 @@ import {IdString} from "./IdString";
 export class Apply {
     constructor(queryElement: any) {
         this.applyRules = [];
+        if (!(typeof Object(queryElement[Symbol.iterator]) === "function")) {
+            throw(new InsightError("Apply must be an array"));
+        }
 
         for (let i of queryElement) {
             this.applyRules.push(new ApplyRule(i));
         }
-        if (this.applyRules.length === 0) {
-            throw (new InsightError("Apply can't be empty"));
-        }
     }
 
-    public applyRules: ApplyRule[]; // this can have one or more but not 0
+    public applyRules: ApplyRule[];
 
     public doApplyRules(groups: Map<string, any[]>, group: Group): any[] {
         // Log.trace(groups);

@@ -1,0 +1,37 @@
+{
+    "title": "Check that the same apply rule applied multiple times works",
+    "query":
+    {
+        "WHERE": {
+            "IS": {
+                "rooms_fullname": "Ponderosa Commons: Oak House"
+            }
+        },
+        "OPTIONS": {
+            "COLUMNS": [
+                "foo",
+                "fluff"
+            ]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_fullname"
+            ],
+            "APPLY": [
+                {
+                    "foo": {
+                        "AVG": "rooms_seats"
+                    }
+                },
+                {
+                    "fluff": {
+                        "AVG": "rooms_lat"
+                    }
+                }
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result":[{"foo":30,"fluff":49.26}]
+}

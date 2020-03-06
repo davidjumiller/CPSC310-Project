@@ -607,13 +607,7 @@ describe("InsightFacade Add/Remove Dataset", function () {
                             GROUP: [
                                 "rooms_name"
                             ],
-                            APPLY: [
-                                {
-                                    foo: {
-                                        AVG: "rooms_seats"
-                                    }
-                                }
-                            ]
+                            APPLY: []
                         }
 
                         // WHERE: {

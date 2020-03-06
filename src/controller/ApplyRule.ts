@@ -33,6 +33,9 @@ export class ApplyRule {
     public applyTokenKey: Key;
 
     public apply(value: any[]): number {
+        if (!value[0][this.applyTokenKey.getKeyField()]) {
+            throw (new InsightError("bad apply rule. Used a key from the wrong dataset"));
+        }
         switch (this.applyToken) {
             case "MAX":
                 return this.max(value);
