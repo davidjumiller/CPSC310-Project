@@ -43,6 +43,9 @@ export class Group {
     }
 
     private getUniqueKeyString(field: any): string {
+        if (!field) {
+            throw (new InsightError("Used a group key from the wrong type of dataset"));
+        }
         let str: string = field.toString();
         let retVal: string = str.concat(str.length.toString());
         // Log.trace(str.concat(retVal));
