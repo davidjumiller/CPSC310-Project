@@ -59,5 +59,10 @@ export class Query {
             throw (new InsightError("invalid query"));
         }
         this.datasetID = this.getDatasetId(this.body.filter);
+        if (!this.datasetID) {
+            if (this.transformation) {
+                this.datasetID = this.transformation.getDatasetID();
+            }
+        }
     }
 }

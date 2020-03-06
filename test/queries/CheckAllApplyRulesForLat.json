@@ -1,0 +1,58 @@
+{
+    "title": "Check that all the apply rules work in a Lat test",
+    "query":
+    {
+        "WHERE": {},
+        "OPTIONS": {
+            "COLUMNS": [
+                "rooms_fullname",
+                "foo",
+                "fluff",
+                "fum",
+                "bar",
+                "foobar"
+            ],
+            "ORDER": {
+                "dir": "DOWN",
+                "keys": [
+                    "rooms_fullname"
+                ]
+            }
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": [
+                "rooms_fullname"
+            ],
+            "APPLY": [
+                {
+                    "foo": {
+                        "AVG": "rooms_lat"
+                    }
+                },
+                {
+                    "fluff": {
+                        "MIN": "rooms_lat"
+                    }
+                },
+                {
+                    "fum": {
+                        "MAX": "rooms_lat"
+                    }
+                },
+                {
+                    "bar": {
+                        "SUM": "rooms_lat"
+                    }
+                },
+                {
+                    "foobar": {
+                        "COUNT": "rooms_lat"
+                    }
+                }
+            ]
+        }
+    }
+,
+    "isQueryValid": true,
+    "result":[{"rooms_fullname":"Woodward (Instructional Resources Centre-IRC)","foo":49.26,"fluff":49.26478,"fum":49.26478,"bar":788.24,"foobar":1},{"rooms_fullname":"West Mall Swing Space","foo":49.26,"fluff":49.26293,"fum":49.26293,"bar":1083.78,"foobar":1},{"rooms_fullname":"Wesbrook","foo":49.27,"fluff":49.26517,"fum":49.26517,"bar":98.53,"foobar":1},{"rooms_fullname":"War Memorial Gymnasium","foo":49.27,"fluff":49.2663,"fum":49.2663,"bar":98.53,"foobar":1},{"rooms_fullname":"The Leon and Thea Koerner University Centre","foo":49.27,"fluff":49.26867,"fum":49.26867,"bar":197.07,"foobar":1},{"rooms_fullname":"Student Recreation Centre","foo":49.27,"fluff":49.2683,"fum":49.2683,"bar":147.8,"foobar":1},{"rooms_fullname":"School of Population and Public Health","foo":49.26,"fluff":49.2642,"fum":49.2642,"bar":295.59,"foobar":1},{"rooms_fullname":"Robert F. Osborne Centre","foo":49.26,"fluff":49.26047,"fum":49.26047,"bar":147.78,"foobar":1},{"rooms_fullname":"Ponderosa Commons: Oak House","foo":49.26,"fluff":49.264,"fum":49.264,"bar":394.11,"foobar":1},{"rooms_fullname":"Pharmaceutical Sciences Building","foo":49.26,"fluff":49.26229,"fum":49.26229,"bar":541.89,"foobar":1},{"rooms_fullname":"Orchard Commons","foo":49.26,"fluff":49.26048,"fum":49.26048,"bar":1034.47,"foobar":1},{"rooms_fullname":"Neville Scarfe","foo":49.26,"fluff":49.26398,"fum":49.26398,"bar":1083.81,"foobar":1},{"rooms_fullname":"Mathematics Annex","foo":49.27,"fluff":49.266089,"fum":49.266089,"bar":49.27,"foobar":1},{"rooms_fullname":"Mathematics","foo":49.27,"fluff":49.266463,"fum":49.266463,"bar":394.13,"foobar":1},{"rooms_fullname":"MacMillan","foo":49.26,"fluff":49.26114,"fum":49.26114,"bar":935.96,"foobar":1},{"rooms_fullname":"MacLeod","foo":49.26,"fluff":49.26176,"fum":49.26176,"bar":295.57,"foobar":1},{"rooms_fullname":"Life Sciences Centre","foo":49.26,"fluff":49.26236,"fum":49.26236,"bar":147.79,"foobar":1},{"rooms_fullname":"Leonard S. Klinck (also known as CSCI)","foo":49.27,"fluff":49.26545,"fum":49.26545,"bar":197.06,"foobar":1},{"rooms_fullname":"Jack Bell Building for the School of Social Work","foo":49.26,"fluff":49.2643,"fum":49.2643,"bar":344.85,"foobar":1},{"rooms_fullname":"Irving K Barber Learning Centre","foo":49.27,"fluff":49.26766,"fum":49.26766,"bar":886.82,"foobar":1},{"rooms_fullname":"Iona Building","foo":49.27,"fluff":49.27106,"fum":49.27106,"bar":98.54,"foobar":1},{"rooms_fullname":"Hugh Dempster Pavilion","foo":49.26,"fluff":49.26125,"fum":49.26125,"bar":246.31,"foobar":1},{"rooms_fullname":"Henry Angus","foo":49.26,"fluff":49.26486,"fum":49.26486,"bar":1379.42,"foobar":1},{"rooms_fullname":"Hennings","foo":49.27,"fluff":49.26627,"fum":49.26627,"bar":295.6,"foobar":1},{"rooms_fullname":"Hebb","foo":49.27,"fluff":49.2661,"fum":49.2661,"bar":197.06,"foobar":1},{"rooms_fullname":"Geography","foo":49.27,"fluff":49.26605,"fum":49.26605,"bar":394.13,"foobar":1},{"rooms_fullname":"Friedman Building","foo":49.27,"fluff":49.26541,"fum":49.26541,"bar":49.27,"foobar":1},{"rooms_fullname":"Frederic Lasserre","foo":49.27,"fluff":49.26767,"fum":49.26767,"bar":295.61,"foobar":1},{"rooms_fullname":"Frank Forward","foo":49.26,"fluff":49.26176,"fum":49.26176,"bar":147.79,"foobar":1},{"rooms_fullname":"Forest Sciences Centre","foo":49.26,"fluff":49.26044,"fum":49.26044,"bar":492.6,"foobar":1},{"rooms_fullname":"Food, Nutrition and Health","foo":49.26,"fluff":49.26414,"fum":49.26414,"bar":295.58,"foobar":1},{"rooms_fullname":"Earth and Ocean Sciences - Main","foo":49.26,"fluff":49.26228,"fum":49.26228,"bar":49.26,"foobar":1},{"rooms_fullname":"Earth Sciences Building","foo":49.26,"fluff":49.26274,"fum":49.26274,"bar":147.79,"foobar":1},{"rooms_fullname":"Civil and Mechanical Engineering","foo":49.26,"fluff":49.26273,"fum":49.26273,"bar":295.58,"foobar":1},{"rooms_fullname":"Chemistry","foo":49.27,"fluff":49.2659,"fum":49.2659,"bar":295.6,"foobar":1},{"rooms_fullname":"Chemical and Biological Engineering Building","foo":49.26,"fluff":49.26228,"fum":49.26228,"bar":147.79,"foobar":1},{"rooms_fullname":"Centre for Interactive  Research on Sustainability","foo":49.26,"fluff":49.26207,"fum":49.26207,"bar":49.26,"foobar":1},{"rooms_fullname":"Buchanan","foo":49.27,"fluff":49.26826,"fum":49.26826,"bar":3005.36,"foobar":1},{"rooms_fullname":"Brock Hall Annex","foo":49.27,"fluff":49.26862,"fum":49.26862,"bar":98.54,"foobar":1},{"rooms_fullname":"Biological Sciences","foo":49.26,"fluff":49.26479,"fum":49.26479,"bar":197.06,"foobar":1},{"rooms_fullname":"Auditorium Annex","foo":49.27,"fluff":49.2666,"fum":49.2666,"bar":98.53,"foobar":1},{"rooms_fullname":"Aquatic Ecosystems Research Laboratory","foo":49.26,"fluff":49.26372,"fum":49.26372,"bar":49.26,"foobar":1},{"rooms_fullname":"Anthropology and Sociology","foo":49.27,"fluff":49.26958,"fum":49.26958,"bar":197.08,"foobar":1},{"rooms_fullname":"Allard Hall (LAW)","foo":49.27,"fluff":49.2699,"fum":49.2699,"bar":246.35,"foobar":1}]
+}

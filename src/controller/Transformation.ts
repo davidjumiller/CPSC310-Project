@@ -54,4 +54,12 @@ export class Transformation {
         this.group.addKeyIds(keyIds);
         this.apply.addKeyIds(keyIds);
     }
+
+    public getDatasetID(): string {
+        let temp: string = this.group.getDatasetID();
+        if (!temp) {
+            temp = this.apply.getDatasetID();
+        }
+        return temp;
+    }
 }

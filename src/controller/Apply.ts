@@ -61,4 +61,12 @@ export class Apply {
             keyIds.push(i.applyTokenKey.getKeyIdClass());
         }
     }
+
+    public getDatasetID(): string {
+        for (let i of this.applyRules) {
+            if (i.applyTokenKey.getKeyId()) {
+                return i.applyTokenKey.getKeyId();
+            }
+        }
+    }
 }

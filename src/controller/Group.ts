@@ -60,4 +60,10 @@ export class Group {
             keyIds.push(i.getKeyIdClass());
         }
     }
+
+    public getDatasetID(): string {
+        for (let i of this.groupKeys) {
+            return i.getKeyId();
+        }
+    }
 }

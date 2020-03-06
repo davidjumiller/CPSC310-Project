@@ -23,7 +23,7 @@ export class ApplyKey extends AnyKey {
     }
 
     public getKeyId(): string {
-        return "";
+        return undefined;
     }
 
     public getKeyIdClass(): IdString {
