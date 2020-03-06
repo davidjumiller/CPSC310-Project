@@ -19,35 +19,19 @@ export class RoomFinder {
                                 ids: string[], reference: InsightFacade, zip: JSZip): Promise<string[]> {
         let buildings: Building[] = [];
         let promises: Array<Promise<any>> = [];
-        let table: any = RoomFinder.findTable(document);
+        let table: any = RoomFinder.findNode(document, "table");
         if (table == null) {
-            Log.trace("Can't find table: " + table);
             throw new InsightError("Can't find table");
         }
-        // tbody is always the 4th (3) obj in the childNodes array
         let tbody: any = table.childNodes[3];
         if (tbody.nodeName === "tbody") {
             tbody.childNodes.forEach((tr: any) => {
                 if (tr.childNodes !== undefined) {
                     let building: Building = new Building();
-                    let td1: any = tr.childNodes[1];
-                    let td2: any = tr.childNodes[3];
-                    let td3: any = tr.childNodes[5];
-                    let td4: any = tr.childNodes[7];
-                    let td5: any = tr.childNodes[9];
-                    // This searchs the td to find the more info's "a"
-                    let a: any = td5.childNodes.find((td5Child: any) => {
-                        return td5Child.nodeName === "a";
+                    tr.childNodes.forEach((td: any) => {
+                        RoomFinder.buildingSwitch(td, building);
                     });
-                    if (a != null && a !== undefined) {
-                        building.path = a.attrs[0].value.slice(2);
-                    }
-                    // TODO This is a little hacky, change this to find the specific attr.value
-                    building.shortname = td2.childNodes[0].value.trim();
-                    building.fullname = td3.childNodes[1].childNodes[0].value.trim();
-                    building.address = td4.childNodes[0].value.trim();
                     promises.push(RoomFinder.findLatLon(building));
-
                     // Checks for duplicate buildings
                     if (buildings.filter((prevBuilding) => prevBuilding.fullname === building.fullname).length < 1) {
                         buildings.push(building);
@@ -61,6 +45,40 @@ export class RoomFinder {
             });
         });
         return p1;
+    }
+
+    private static buildingSwitch(td: any, building: Building) {
+        if (td.nodeName === "td" && td.attrs.length > 0) {
+            let a: any = RoomFinder.findNode(td, "a");
+            let value: any;
+            let temp: any;
+            // If "a" exists under td then search a for text
+            if (a !== undefined) {
+                temp = RoomFinder.findNode(a, "#text");
+            } else {
+                temp = RoomFinder.findNode(td, "#text");
+            }
+            // If findNode cant find "#text" within "a" then this is likely the image td
+            if (temp !== undefined) {
+                value = temp.value.trim();
+            }
+            switch (td.attrs[0].value) {
+                case "views-field views-field-field-building-code":
+                    building.shortname = value;
+                    break;
+                case "views-field views-field-title":
+                    building.fullname = value;
+                    break;
+                case "views-field views-field-field-building-address":
+                    building.address = value;
+                    break;
+                case "views-field views-field-nothing":
+                    if (a.attrs.length > 0) {
+                        building.path = a.attrs[0].value.slice(2);
+                    }
+                    break;
+            }
+        }
     }
 
     // Navigates to the room file and finds the number, furniture, type
@@ -80,7 +98,7 @@ export class RoomFinder {
                             return;
                         }
                         let document: parse5.Document = parse5.parse(buildingFile);
-                        let table: any = RoomFinder.findTable(document);
+                        let table: any = RoomFinder.findNode(document, "table");
                         if (table != null && table !== undefined) {
                             let tbody: any = table.childNodes[3];
                             if (tbody.nodeName === "tbody") {
@@ -110,19 +128,19 @@ export class RoomFinder {
         return p1;
     }
 
-    private static findTable(document: any): any {
+    private static findNode(document: any, key: string): any {
         let children: any = document.childNodes;
-        if (document.nodeName === "table") {
+        if (document.nodeName === key) {
             return document;
         } else if (children != null && children !== undefined) {
-            let potentialTable: any;
+            let potentialNode: any;
             children.find((child: any) => {
-                potentialTable = RoomFinder.findTable(child);
-                if (potentialTable !== undefined) {
+                potentialNode = RoomFinder.findNode(child, key);
+                if (potentialNode !== undefined) {
                     return true;
                 }
             });
-            return potentialTable;
+            return potentialNode;
         }
     }
 
@@ -136,12 +154,13 @@ export class RoomFinder {
                 room.address = building.address;
                 room.lat = building.lat;
                 room.lon = building.lon;
-                room.number = tr.childNodes[1].childNodes[1].childNodes[0].value;
-                // TODO If seats is not given, default value is 0
-                room.seats = tr.childNodes[3].childNodes[0].value.trim();
-                room.furniture = tr.childNodes[5].childNodes[0].value.trim();
-                room.type = tr.childNodes[7].childNodes[0].value.trim();
-                room.href = tr.childNodes[9].childNodes[1].attrs[0].value;
+
+                tr.childNodes.forEach((td: any) => {
+                    RoomFinder.roomSwitch(td, room);
+                });
+                if (isNaN(room.seats) || room.seats === undefined) {
+                    room.seats = 0;
+                }
                 room.name = room.shortname + "_" + room.number;
                 if (RoomFinder.isRoomValid(room)) {
                     roomsInBuilding.push(room);
@@ -150,6 +169,43 @@ export class RoomFinder {
         });
 
         return roomsInBuilding;
+    }
+
+    private static roomSwitch(td: any, room: Room) {
+        if (td.nodeName === "td" && td.attrs.length > 0) {
+            let a: any = RoomFinder.findNode(td, "a");
+            let value: any;
+            let temp: any;
+            // If "a" exists under td then search a for text
+            if (a !== undefined) {
+                temp = RoomFinder.findNode(a, "#text");
+            } else {
+                temp = RoomFinder.findNode(td, "#text");
+            }
+            // If findNode cant find "#text" within "a" then this is likely the image td
+            if (temp !== undefined) {
+                value = temp.value.trim();
+            }
+            switch (td.attrs[0].value) {
+                case "views-field views-field-field-room-number":
+                    room.number = value;
+                    break;
+                case "views-field views-field-field-room-capacity":
+                    room.seats = Number(value);
+                    break;
+                case "views-field views-field-field-room-furniture":
+                    room.furniture = value;
+                    break;
+                case "views-field views-field-field-room-type":
+                    room.type = value;
+                    break;
+                case "views-field views-field-nothing":
+                    if (a.attrs.length > 0) {
+                        room.href = a.attrs[0].value;
+                    }
+                    break;
+            }
+        }
     }
 
     private static isBuildingValid(curBuilding: Building): boolean {
