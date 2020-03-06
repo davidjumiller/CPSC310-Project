@@ -14,9 +14,9 @@ export class Apply {
         if (!(typeof Object(queryElement[Symbol.iterator]) === "function")) {
             throw(new InsightError("Apply must be an array"));
         }
-
+        let addedApplyRuleKeys: string[] = [];
         for (let i of queryElement) {
-            this.applyRules.push(new ApplyRule(i));
+            this.applyRules.push(new ApplyRule(i, addedApplyRuleKeys));
         }
     }
 

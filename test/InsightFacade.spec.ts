@@ -593,18 +593,20 @@ describe("InsightFacade Add/Remove Dataset", function () {
                 .then((result: string[]) => {
                     return insightFacade.performQuery({
 
-                        WHERE: {},
+                        WHERE: {
+                            IS: {courses_dept: "cpsc"}
+                        },
                         OPTIONS: {
                         COLUMNS: ["courses_title", "overallAvg"]
                     },
                         TRANSFORMATIONS: {
-                        GROUP: ["courses_title"],
+                            GROUP: ["courses_title", "courses_avg"],
                             APPLY: [{
-                            overallAvg: {
-                                AVG: "courses_avg"
-                            }
-                        }]
-                    }
+                                overallAvg: {
+                                    AVG: "courses_avg"
+                                }
+                            }],
+                        }
 
 
                         // WHERE: {

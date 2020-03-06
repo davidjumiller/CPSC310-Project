@@ -1,0 +1,26 @@
+{
+    "title": "Check failure on duplicate apply keys",
+    "query":
+
+    {
+        "WHERE": {"IS": {"courses_instructor": "*"}},
+        "OPTIONS": {
+            "COLUMNS": ["courses_title", "overallAvg", "overallAvg"]
+        },
+        "TRANSFORMATIONS": {
+            "GROUP": ["courses_title"],
+            "APPLY": [{
+                "overallAvg": {
+                    "AVG": "courses_avg"
+                }},
+                {
+                    "overallAvg": {
+                        "SUM": "courses_avg"
+                    }}
+            ]
+        }
+    }
+,
+    "isQueryValid": false,
+    "result": "InsightError"
+}
