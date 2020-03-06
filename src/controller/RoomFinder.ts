@@ -21,33 +21,17 @@ export class RoomFinder {
         let promises: Array<Promise<any>> = [];
         let table: any = RoomFinder.findTable(document);
         if (table == null) {
-            Log.trace("Can't find table: " + table);
             throw new InsightError("Can't find table");
         }
-        // tbody is always the 4th (3) obj in the childNodes array
         let tbody: any = table.childNodes[3];
         if (tbody.nodeName === "tbody") {
             tbody.childNodes.forEach((tr: any) => {
                 if (tr.childNodes !== undefined) {
                     let building: Building = new Building();
-                    let td1: any = tr.childNodes[1];
-                    let td2: any = tr.childNodes[3];
-                    let td3: any = tr.childNodes[5];
-                    let td4: any = tr.childNodes[7];
-                    let td5: any = tr.childNodes[9];
-                    // This searchs the td to find the more info's "a"
-                    let a: any = td5.childNodes.find((td5Child: any) => {
-                        return td5Child.nodeName === "a";
+                    tr.childNodes.forEach((td: any) => {
+                        RoomFinder.buildingSwitch(td, building);
                     });
-                    if (a != null && a !== undefined) {
-                        building.path = a.attrs[0].value.slice(2);
-                    }
-                    // TODO This is a little hacky, change this to find the specific attr.value
-                    building.shortname = td2.childNodes[0].value.trim();
-                    building.fullname = td3.childNodes[1].childNodes[0].value.trim();
-                    building.address = td4.childNodes[0].value.trim();
                     promises.push(RoomFinder.findLatLon(building));
-
                     // Checks for duplicate buildings
                     if (buildings.filter((prevBuilding) => prevBuilding.fullname === building.fullname).length < 1) {
                         buildings.push(building);
@@ -61,6 +45,33 @@ export class RoomFinder {
             });
         });
         return p1;
+    }
+
+    private static buildingSwitch(td: any, building: Building) {
+        if (td.nodeName === "td") {
+            let a: any = RoomFinder.searchTree(td, "a");
+            let value: any;
+            // If "a" exists under td then search a for text
+            if (a !== undefined) {
+                value = RoomFinder.searchTree(a, "#text").value.trim();
+            } else {
+                value = RoomFinder.searchTree(td, "#text").value.trim();
+            }
+            switch (td.attrs[0].value) {
+                case "views-field views-field-field-building-code":
+                    building.shortname = value;
+                    break;
+                case "views-field views-field-field-building-address":
+                    building.fullname = value;
+                    break;
+                case "views-field views-field-field-building-address":
+                    building.address = value;
+                    break;
+                case "views-field views-field-nothing":
+                    building.path = a.attrs[0].value.slice(2);
+                    break;
+            }
+        }
     }
 
     // Navigates to the room file and finds the number, furniture, type
@@ -179,6 +190,16 @@ export class RoomFinder {
             return false;
         }
         return true;
+    }
+
+    private static searchTree(startNode: any, nodeName: string): any {
+        if (startNode.nodeName === nodeName) {
+            return startNode;
+        } else if (startNode.childNodes !== undefined) {
+            for (const childNode of startNode.childNodes) {
+                return RoomFinder.searchTree(childNode, nodeName);
+            }
+        }
     }
 
     private static findLatLon(building: Building): Promise<any> {
