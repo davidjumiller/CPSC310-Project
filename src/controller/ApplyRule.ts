@@ -5,12 +5,12 @@ import {InsightError} from "./IInsightFacade";
 import Decimal from "decimal.js";
 
 export class ApplyRule {
-    constructor(rule: any) {
+    constructor(rule: any, addedApplyRuleKeys: string[]) {
         let applyKeyTemp: any[] = Object.keys(rule);
         if (applyKeyTemp.length > 1) {
             throw (new InsightError("Invalid apply key"));
         }
-        this.applyKey = new ApplyKey(applyKeyTemp[0]);
+        this.applyKey = new ApplyKey(applyKeyTemp[0], addedApplyRuleKeys);
         let applyTokenKeys: any[] = Object.keys(rule[applyKeyTemp[0]]);
 
         if (applyTokenKeys.length !== 1) {
@@ -33,7 +33,7 @@ export class ApplyRule {
     public applyTokenKey: Key;
 
     public apply(value: any[]): number {
-        if (!value[0][this.applyTokenKey.getKeyField()]) {
+        if (value[0][this.applyTokenKey.getKeyField()] === undefined ) {
             throw (new InsightError("bad apply rule. Used a key from the wrong dataset"));
         }
         switch (this.applyToken) {

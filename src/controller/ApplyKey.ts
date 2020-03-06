@@ -3,12 +3,18 @@ import {AnyKey} from "./AnyKey";
 import {IdString} from "./IdString";
 
 export class ApplyKey extends AnyKey {
-    constructor(keyString: string) {
+    constructor(keyString: string, addedApplyRuleKeys: string[]) {
         super();
+        if (addedApplyRuleKeys && addedApplyRuleKeys.includes(keyString)) {
+            throw( new InsightError("Duplicate Apply Key " + keyString));
+        }
         if (keyString.includes("_")) {
             throw (new InsightError("Apply keys can't contain '_'"));
         } else {
             this.key = keyString;
+            if (addedApplyRuleKeys) {
+                addedApplyRuleKeys.push(keyString);
+            }
         }
     }
 

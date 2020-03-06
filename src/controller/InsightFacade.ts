@@ -1,5 +1,12 @@
 import Log from "../Util";
-import {IInsightFacade, InsightDataset, InsightDatasetKind, InsightError, NotFoundError} from "./IInsightFacade";
+import {
+    IInsightFacade,
+    InsightDataset,
+    InsightDatasetKind,
+    InsightError,
+    NotFoundError,
+    ResultTooLargeError
+} from "./IInsightFacade";
 import * as JSZip from "jszip";
 import { Section } from "./Section";
 import {Dataset} from "./Dataset";
@@ -73,6 +80,9 @@ export default class InsightFacade implements IInsightFacade {
             }
             // let selectedFields: string[] = QueryHandler.executeOptions(query.options);
             let retval: any[] = QueryHandler.filterWithOptions(selectedSections, parsedQuery.options);
+            if (retval.length > 5000) {
+                throw (new ResultTooLargeError("over 5000 sections match this query"));
+            }
             // Log.trace(retval);
             return Promise.resolve(retval);
         } catch (e) {

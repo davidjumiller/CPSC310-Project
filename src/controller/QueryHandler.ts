@@ -85,10 +85,10 @@ export class QueryHandler {
             if (QueryHandler.matchesFilter(query.body.filter, section, activeDataset.isd.kind)) {
                 // Log.trace("yay matches");
                 retval.push(section);
-                // Make sure that there aren't too many matching sections
-                if (retval.length > 5000) {
-                    throw (new ResultTooLargeError("over 5000 sections match this query"));
-                }
+                // // Make sure that there aren't too many matching sections
+                // if (retval.length > 5000) {
+                //     throw (new ResultTooLargeError("over 5000 sections match this query"));
+                // }
             }
             // TODO check if the section meets the query
         }

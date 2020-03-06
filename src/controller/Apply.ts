@@ -14,9 +14,9 @@ export class Apply {
         if (!(typeof Object(queryElement[Symbol.iterator]) === "function")) {
             throw(new InsightError("Apply must be an array"));
         }
-
+        let addedApplyRuleKeys: string[] = [];
         for (let i of queryElement) {
-            this.applyRules.push(new ApplyRule(i));
+            this.applyRules.push(new ApplyRule(i, addedApplyRuleKeys));
         }
     }
 
@@ -32,7 +32,7 @@ export class Apply {
 
             for (let applyRule of this.applyRules) {
                 curObj[applyRule.applyKey.getKeyField()] = applyRule.apply(value);
-                if (!curObj[applyRule.applyKey.getKeyField()]) {
+                if (curObj[applyRule.applyKey.getKeyField()] === undefined) {
                     throw (new InsightError("bad apply rule. Used a key from the wrong dataset"));
                 }
             }
